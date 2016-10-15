@@ -8,6 +8,8 @@
 \usepackage{hyperref}
 \usepackage{tikz-uml}
 
+\usetikzlibrary{positioning}
+
 \sloppy
 \frenchspacing
 
@@ -29,51 +31,66 @@ A feladat egy Wikipédia-követő alkalmazás elkészítése, amely lehetővé t
 A projekt során célunk egy olyan alkalmazás készítése, amely képes követni a felhasználó által kiválasztott Wikipédia szócikkek változtatásait, és a megadott beállítások szerint értesítést küld.
 
 A Wikipédia-szócikk követésének folyamata a következő:
-1. Bejelentkezés
-A felhasználóknak be kell jelentkezniük az alkalmazás használatához. A bejelentkezés más weboldalak felhasználói fiókjaival lehetséges (első sorban Wikipédia account, de bővíthető Facebook vagy egyéb más account-tal is).
-2. Feliratkozás a szócikkekre
-Az alkalmazás a saját adatbázisában tárolja a figyelendő Wikipédia-szócikkek elérhetőségét és hogy mely felhasználók szeretnének a változásaikról értesítést kapni. Minden felhasználó hozzáadhat saját listájához új szócikket követésre tetszőleges számban vagy eltávolíthat már meglévőket (szükség esetén a követések száma korlátozható).
-3. Értesítés beállításai
-A felhasználó a szócikkekhez beállíthatja, hogy mikor szeretne értesítést kapni a változásról. Választhat meghatározott értesítési gyakoriságok közül (tíz percenként, óránként, naponta, hetente, havonta), illetve a változás mértékére és helyésre is megkötéseket tehet. Kérhető, hogy párszavas, vagy a szócikk egy adott szakaszán kívül eső változásokról ne értesítsen az alkalmazás.
-4. Detektálás
-Az alkalmazás az összes figyelt szócikket ütemezetten átnézi, detektálja a változásokat, és a megadott beállítások alapján dönt az értesítés lementéséről az érintett felhasználó fiókjában.
-5. Értesítések küldése
-Az alkalmazás ütemezetten végignézi az összes felhasználót, és ha talál lementett kiküldendő értesítéseket, azokat összefűzi egy email-be, és eljuttatja a felhasználó címére.
-
-\begin{itemize}
-\item 
-\end{itemize}
+\begin{description}
+\item[Bejelentkezés] A felhasználóknak be kell jelentkezniük az alkalmazás használatához. A bejelentkezés más weboldalak felhasználói fiókjaival lehetséges (első sorban Wikipédia account, de bővíthető Facebook vagy egyéb más account-tal is).
+\item[Feliratkozás a szócikkekre] Az alkalmazás a saját adatbázisában tárolja a figyelendő Wikipédia-szócikkek elérhetőségét és hogy mely felhasználók szeretnének a változásaikról értesítést kapni. Minden felhasználó hozzáadhat saját listájához új szócikket követésre tetszőleges számban vagy eltávolíthat már meglévőket (szükség esetén a követések száma korlátozható).
+\item[Értesítés beállításai] A felhasználó a szócikkekhez beállíthatja, hogy mikor szeretne értesítést kapni a változásról. Választhat meghatározott értesítési gyakoriságok közül (tíz percenként, óránként, naponta, hetente, havonta), illetve a változás mértékére és helyésre is megkötéseket tehet. Kérhető, hogy párszavas, vagy a szócikk egy adott szakaszán kívül eső változásokról ne értesítsen az alkalmazás.
+\item[Detektálás] Az alkalmazás az összes figyelt szócikket ütemezetten átnézi, detektálja a változásokat, és a megadott beállítások alapján dönt az értesítés lementéséről az érintett felhasználó fiókjában.
+\item[Értesítések küldése] Az alkalmazás ütemezetten végignézi az összes felhasználót, és ha talál lementett kiküldendő értesítéseket, azokat összefűzi egy email-be, és eljuttatja a felhasználó címére.
+\end{description}
 
 \section*{Technikai paraméterek}
 
-A szoftver egy a \emph{Java Platform, Enterprise Edition (Java EE)}-re épülő webes alkalmazás lesz. A külső komponensekkel a beépített absztrakciós rétegeken keresztül fog kommunikálni.
-Az adatbázis elérése \emph{Java Persistence API (JPA)} használatával fog történni.
-A Wikipédia API-jának elérése HTTP-keresztül REST kérésekkel \emph{Java API for RESTful Web Services (JAX-RS)} használatával fog történni.
-A program minden olyan rendszeren futni fog, amiket ezeket támogatja.
+A szoftver egy a \emph{Java Platform, Enterprise Edition (Java EE)}-re épülő webes alkalmazás lesz. A külső komponensekkel a beépített absztrakciós rétegeken keresztül fog kommunikálni. Az adatbázis elérése \emph{Java Persistence API (JPA)} használatával fog történni. A Wikipédia API-jának elérése REST kérésekkel \emph{Java API for RESTful Web Services (JAX-RS)} használatával fog történni. A program minden olyan rendszeren futni fog, amiket ezeket támogatja.
 
 \section*{Szótár}
 
 \begin{description}
-\item[Szócikk] bla-bla
+\item[Szócikk] A Wikipédia egy többnyelvű, nyílt tartalmú, a wikipédisták közössége által fejlesztett szabad enciklopédia. Ennek megfelelően dolgok és fogalmak leírásait tartalmazza külön oldalakon. Ezeket az oldalakat tekintjük egy-egy szócikknek, amiknek így tehát fontos tulajdonságuk, hogy saját, azonosításra alkalmas URL címük van.
 \item[Fejezet] Egy szócikk kisebb egysége, külön címmel.
-\item[Minimális értesítési intervallum] Az értesítés gyakoriságának legkisebb lehetséges értéke. A felhasználó ennek többszörösét adhatja meg.
-\item[Követés] A felhasználó követhet egy 
+\item[Változás] Egy szócikk tartalmának bármilyen minimális eltérése egy korábbi állapothoz képest (már egy betű megváltozása is).
+\item[Releváns változás] Azon változások, amikről a felhasználó értesülni szeretne.
+\item[Értesítés] Szöveges üzenet küldése a felhasználó által megadott email címre a releváns változásokról.
+\item[Detektálás] Az a folyamat, amikor egy adott szócikkről megállapítjuk, hogy tartalmaz-e változásokat.
+\item[Értesítési gyakoriság] Egy időintervallum, amilyen időközönként a felhasználónak értesítést kell küldeni a releváns változásokról.
+\item[Detektálási gyakoriság] Egy időintervallum, amilyen időközönként egy adott szócikk változásait ellenőrizni kell. (Ez az intervallum legfeljebb akkora lehet, mint a szócikkhez a felhasználók által beállított legkisebb értesítési gyakoriság.)
+\item[Követés] Amikor alkalmazás detektálási gyakorisággal egy szócikk releváns változásait igyekszik detektálni, akkor az alkalmazás az adott szócikket követi.
+\item[Feliratkozás] A felhasználók egy szócikkre feliratkozással jelzik, hogy értesülni szeretnének annak releváns változásairól (vagyis az alkalmazás kövesse az adott szócikket).
 \end{description}
 
 \section*{Use-case-ek}
 
 \begin{tikzpicture}
   \umlactor{felhasználó}
-  \begin{umlsystem}[x=5]{FolloWiki}
-    \umlusecase[x=5cm, y=-2, width=2cm, name=select]{szócikk kiválasztása}
-    \umlusecase[x=5, width=2cm, name=interval]{értesítési gyakoriság megadása}
-    \umlusecase[x=5, y=2, width=2cm, name=paragraph]{szűkítés fejezetre}
-    \umlusecase[name=follow]{követés}
+  \begin{umlsystem}{FolloWiki}
+      \umlusecase[name=follow, right=2cm of felhasználó]{feliratkozás}
+      \umlusecase[name=interval, right=2cm of follow, text width=3cm]{értesítési gyakoriság megadása}
+      \umlusecase[name=select, above=.5cm of interval, text width=3cm]{szócikk kiválasztása}
+      \umlusecase[name=paragraph, below=.5cm of interval, text width=3cm]{szűkítés fejezetre}
+      \umlinclude{follow}{select}
+      \umlinclude{follow}{interval}
+      \umlinclude{follow}{paragraph}
+      \umlassoc{felhasználó}{follow}
 
-    \umlassoc{felhasználó}{follow}
-    \umlinclude{follow}{select}
-    \umlinclude{follow}{interval}
-    \umlinclude{follow}{paragraph}
+      \umlusecase[name=register, above=.5cm of select]{regisztráció}
+      \umlusecase[name=settings, above=1cm of follow, text width=2cm]{profil módosítása}
+      \umlassoc{felhasználó}{settings}
+      \umlinherit{register}{settings}
+
+      \umlusecase[name=external, above=.5cm of register, text width=3cm]{bejelentkezés külső fiókkal}
+      \umlusecase[name=login, above=1.5cm of settings]{bejelentkezés}
+      \umlextend{external}{login}
+      \umlassoc{felhasználó}{login}
+      
+      \umlusecase[name=remove, below=1cm of follow]{leiratkozás}
+      \umlassoc{felhasználó}{remove}
+
+      \umlusecase[name=web, below=.5cm of paragraph]{az alkalmazásban}
+      \umlusecase[name=mail, below=.5cm of web]{e-mailben}
+      \umlusecase[name=change, below=1cm of remove, text width=3cm]{változtatások megtekintése}
+      \umlinclude{change}{web}
+      \umlinclude{change}{mail}
+      \umlassoc{felhasználó}{change}
   \end{umlsystem}
 \end{tikzpicture}
 
