@@ -54,10 +54,16 @@ A program minden olyan rendszeren futni fog, amiket ezeket támogatja.
 \section*{Szótár}
 
 \begin{description}
-\item[Szócikk] bla-bla
+\item[Szócikk] A Wikipédia egy többnyelvű, nyílt tartalmú, a wikipédisták közössége által fejlesztett szabad enciklopédia. Ennek megfelelően dolgok és fogalmak leírásait tartalmazza külön oldalakon. Ezeket az oldalakat tekintjük egy-egy szócikknek, amiknek így tehát fontos tulajdonságuk, hogy saját, azonosításra alkalmas URL címük van.
 \item[Fejezet] Egy szócikk kisebb egysége, külön címmel.
-\item[Minimális értesítési intervallum] Az értesítés gyakoriságának legkisebb lehetséges értéke. A felhasználó ennek többszörösét adhatja meg.
-\item[Követés] A felhasználó követhet egy 
+\item[Változás] Egy szócikk tartalmának bármilyen minimális eltérése egy korábbi állapothoz képest (már egy betű megváltozása is).
+\item[Releváns változás] Azon változások, amikről a felhasználó értesülni szeretne.
+\item[Értesítés] Szöveges üzenet küldése a felhasználó által megadott email címre a releváns változásokról.
+\item[Detektálás] Az a folyamat, amikor egy adott szócikkről megállapítjuk, hogy tartalmaz-e változásokat.
+\item[Értesítési gyakoriság] Egy időintervallum, amilyen időközönként a felhasználónak értesítést kell küldeni a releváns változásokról.
+\item[Detektálási gyakoriság] Egy időintervallum, amilyen időközönként egy adott szócikk változásait ellenőrizni kell. (Ez az intervallum legfeljebb akkora lehet, mint a szócikkhez a felhasználók által beállított legkisebb értesítési gyakoriság.)
+\item[Követés] Amikor alkalmazás detektálási gyakorisággal egy szócikk releváns változásait igyekszik detektálni, akkor az alkalmazás az adott szócikket követi.
+\item[Feliratkozás] A felhasználók egy szócikkre feliratkozással jelzik, hogy értesülni szeretnének annak releváns változásairól (vagyis az alkalmazás kövesse az adott szócikket).
 \end{description}
 
 \section*{Use-case-ek}
