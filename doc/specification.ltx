@@ -26,16 +26,22 @@ A feladat egy Wikipédia-követő alkalmazás elkészítése, amely lehetővé t
 
 \section*{Részletes feladatkiírás}
 
-A projekt során célunk egy olyan alkalmazás készítése, amely képes követni a felhasználó által kiválasztott Wikipédia szócikkek változtatásait, és az általa megadott beállítások szerint értesíti őt ezekről.
+A projekt során célunk egy olyan alkalmazás készítése, amely képes követni a felhasználó által kiválasztott Wikipédia szócikkek változtatásait, és a megadott beállítások szerint értesítést küld.
 
-A következő lépésekből áll, amikor a felhasználó egy szócikket követ:
+A Wikipédia-szócikk követésének folyamata a következő:
+1. Bejelentkezés
+A felhasználóknak be kell jelentkezniük az alkalmazás használatához. A bejelentkezés más weboldalak felhasználói fiókjaival lehetséges (első sorban Wikipédia account, de bővíthető Facebook vagy egyéb más account-tal is).
+2. Feliratkozás a szócikkekre
+Az alkalmazás a saját adatbázisában tárolja a figyelendő Wikipédia-szócikkek elérhetőségét és hogy mely felhasználók szeretnének a változásaikról értesítést kapni. Minden felhasználó hozzáadhat saját listájához új szócikket követésre tetszőleges számban vagy eltávolíthat már meglévőket (szükség esetén a követések száma korlátozható).
+3. Értesítés beállításai
+A felhasználó a szócikkekhez beállíthatja, hogy mikor szeretne értesítést kapni a változásról. Választhat meghatározott értesítési gyakoriságok közül (tíz percenként, óránként, naponta, hetente, havonta), illetve a változás mértékére és helyésre is megkötéseket tehet. Kérhető, hogy párszavas, vagy a szócikk egy adott szakaszán kívül eső változásokról ne értesítsen az alkalmazás.
+4. Detektálás
+Az alkalmazás az összes figyelt szócikket ütemezetten átnézi, detektálja a változásokat, és a megadott beállítások alapján dönt az értesítés lementéséről az érintett felhasználó fiókjában.
+5. Értesítések küldése
+Az alkalmazás ütemezetten végignézi az összes felhasználót, és ha talál lementett kiküldendő értesítéseket, azokat összefűzi egy email-be, és eljuttatja a felhasználó címére.
+
 \begin{itemize}
 \item 
-\end{itemize}
-
-A rendszer tehát a következő lépéseket végzi:
-\begin{itemize}
-\item
 \end{itemize}
 
 \section*{Technikai paraméterek}
