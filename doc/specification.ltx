@@ -4,13 +4,15 @@
 \usepackage[utf8]{inputenc}
 \usepackage[magyar]{babel}
 \usepackage{fullpage}
+\usepackage{xcolor}
 \usepackage{hyperref}
+\usepackage{tikz-uml}
 
 \sloppy
 \frenchspacing
 
 \title{FolloWiki követelményspecifikáció}
-\author{Bogáncs~Dániel\\ (NEPTUN)\\ \url{e@mai.l}
+\author{Bogáncs~Dániel\\ (H6K1XW)\\ \url{d.bogancs@gmail.com}
   \and
   Ludmány~Balázs\\ (ZG85W7)\\ \url{ldmnyblzs@outlook.com}}
 \date{2016 ősz}
@@ -24,12 +26,46 @@ A feladat egy Wikipédia-követő alkalmazás elkészítése, amely lehetővé t
 
 \section*{Részletes feladatkiírás}
 
+A projekt során célunk egy olyan alkalmazás készítése, amely képes követni a felhasználó által kiválasztott Wikipédia szócikkek változtatásait, és az általa megadott beállítások szerint értesíti őt ezekről.
+
+A következő lépésekből áll, amikor a felhasználó egy szócikket követ:
+\begin{itemize}
+\item 
+\end{itemize}
+
+A rendszer tehát a következő lépéseket végzi:
+\begin{itemize}
+\item
+\end{itemize}
+
 \section*{Technikai paraméterek}
 
 A szoftver egy a \emph{Java Platform, Enterprise Edition (Java EE)}-re épülő webes alkalmazás lesz. A külső komponensekkel a beépített absztrakciós rétegeken keresztül fog kommunikálni (pl. \emph{Java API for RESTful Web Services (JAX-RS)} a Wikipédia API-jának eléréséhez, \emph{Java Persistence API (JPA)} az objektumok tárolására adatbázisban stb.), így a program minden olyan rendszeren futni fog, amiket ezek támogatnak.
 
 \section*{Szótár}
 
+\begin{description}
+\item[Szócikk] bla-bla
+\item[Fejezet] Egy szócikk kisebb egysége, külön címmel.
+\item[Minimális értesítési intervallum] Az értesítés gyakoriságának legkisebb lehetséges értéke. A felhasználó ennek többszörösét adhatja meg.
+\item[Követés] A felhasználó követhet egy 
+\end{description}
+
 \section*{Use-case-ek}
+
+\begin{tikzpicture}
+  \umlactor{felhasználó}
+  \begin{umlsystem}[x=5]{FolloWiki}
+    \umlusecase[x=5cm, y=-2, width=2cm, name=select]{szócikk kiválasztása}
+    \umlusecase[x=5, width=2cm, name=interval]{értesítési gyakoriság megadása}
+    \umlusecase[x=5, y=2, width=2cm, name=paragraph]{szűkítés fejezetre}
+    \umlusecase[name=follow]{követés}
+
+    \umlassoc{felhasználó}{follow}
+    \umlinclude{follow}{select}
+    \umlinclude{follow}{interval}
+    \umlinclude{follow}{paragraph}
+  \end{umlsystem}
+\end{tikzpicture}
 
 \end{document}
