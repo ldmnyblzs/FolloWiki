@@ -46,7 +46,10 @@ Az alkalmazás ütemezetten végignézi az összes felhasználót, és ha talál
 
 \section*{Technikai paraméterek}
 
-A szoftver egy a \emph{Java Platform, Enterprise Edition (Java EE)}-re épülő webes alkalmazás lesz. A külső komponensekkel a beépített absztrakciós rétegeken keresztül fog kommunikálni (pl. \emph{Java API for RESTful Web Services (JAX-RS)} a Wikipédia API-jának eléréséhez, \emph{Java Persistence API (JPA)} az objektumok tárolására adatbázisban stb.), így a program minden olyan rendszeren futni fog, amiket ezek támogatnak.
+A szoftver egy a \emph{Java Platform, Enterprise Edition (Java EE)}-re épülő webes alkalmazás lesz. A külső komponensekkel a beépített absztrakciós rétegeken keresztül fog kommunikálni.
+Az adatbázis elérése \emph{Java Persistence API (JPA)} használatával fog történni.
+A Wikipédia API-jának elérése HTTP-keresztül REST kérésekkel \emph{Java API for RESTful Web Services (JAX-RS)} használatával fog történni.
+A program minden olyan rendszeren futni fog, amiket ezeket támogatja.
 
 \section*{Szótár}
 
