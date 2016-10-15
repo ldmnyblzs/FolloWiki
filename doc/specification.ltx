@@ -28,12 +28,12 @@ A feladat egy Wikipédia-követő alkalmazás elkészítése, amely lehetővé t
 
 \section*{Részletes feladatkiírás}
 
-A projekt során célunk egy olyan alkalmazás készítése, amely képes követni a felhasználó által kiválasztott Wikipédia szócikkek változtatásait, és a megadott beállítások szerint értesítést küld.
+A projekt során célunk egy olyan alkalmazás készítése, amely képes követni a felhasználó által kiválasztott Wikipédia szócikkek változtatásait, és a megadott beállítások szerint értesítéseket küld.
 
 A Wikipédia-szócikk követésének folyamata a következő:
 \begin{description}
 \item[Bejelentkezés] A felhasználóknak be kell jelentkezniük az alkalmazás használatához. A bejelentkezés más weboldalak felhasználói fiókjaival lehetséges (első sorban Wikipédia account, de bővíthető Facebook vagy egyéb más account-tal is).
-\item[Feliratkozás a szócikkekre] Az alkalmazás a saját adatbázisában tárolja a figyelendő Wikipédia-szócikkek elérhetőségét és hogy mely felhasználók szeretnének a változásaikról értesítést kapni. Minden felhasználó hozzáadhat saját listájához új szócikket követésre tetszőleges számban vagy eltávolíthat már meglévőket (szükség esetén a követések száma korlátozható).
+\item[Feliratkozás a szócikkekre] Az alkalmazás a saját adatbázisában tárolja a figyelendő Wikipédia-szócikkek elérhetőségét és hogy mely felhasználók szeretnének a változásaikról értesítést kapni. Minden felhasználó hozzáadhat saját listájához új szócikket tetszőleges számban vagy eltávolíthat már meglévőket (szükség esetén a feliratkozások száma korlátozható).
 \item[Értesítés beállításai] A felhasználó a szócikkekhez beállíthatja, hogy mikor szeretne értesítést kapni a változásról. Választhat meghatározott értesítési gyakoriságok közül (tíz percenként, óránként, naponta, hetente, havonta), illetve a változás mértékére és helyésre is megkötéseket tehet. Kérhető, hogy párszavas, vagy a szócikk egy adott szakaszán kívül eső változásokról ne értesítsen az alkalmazás.
 \item[Detektálás] Az alkalmazás az összes figyelt szócikket ütemezetten átnézi, detektálja a változásokat, és a megadott beállítások alapján dönt az értesítés lementéséről az érintett felhasználó fiókjában.
 \item[Értesítések küldése] Az alkalmazás ütemezetten végignézi az összes felhasználót, és ha talál lementett kiküldendő értesítéseket, azokat összefűzi egy email-be, és eljuttatja a felhasználó címére.
@@ -41,7 +41,7 @@ A Wikipédia-szócikk követésének folyamata a következő:
 
 \section*{Technikai paraméterek}
 
-A szoftver egy a \emph{Java Platform, Enterprise Edition (Java EE)}-re épülő webes alkalmazás lesz. A külső komponensekkel a beépített absztrakciós rétegeken keresztül fog kommunikálni. Az adatbázis elérése \emph{Java Persistence API (JPA)} használatával fog történni. A Wikipédia API-jának elérése REST kérésekkel \emph{Java API for RESTful Web Services (JAX-RS)} használatával fog történni. A program minden olyan rendszeren futni fog, amiket ezeket támogatja.
+A szoftver egy a \emph{Java Platform, Enterprise Edition (Java EE)}-re épülő webes alkalmazás lesz. A külső komponensekkel a beépített absztrakciós rétegeken keresztül fog kommunikálni. Az adatbázis elérése \emph{Java Persistence API (JPA)}, a Wikipédia API-jának elérése REST kérésekkel \emph{Java API for RESTful Web Services (JAX-RS)} használatával fog történni. A program minden olyan rendszeren futni fog, amiket ezeket támogatja.
 
 \section*{Szótár}
 
@@ -54,7 +54,7 @@ A szoftver egy a \emph{Java Platform, Enterprise Edition (Java EE)}-re épülő 
 \item[Detektálás] Az a folyamat, amikor egy adott szócikkről megállapítjuk, hogy tartalmaz-e változásokat.
 \item[Értesítési gyakoriság] Egy időintervallum, amilyen időközönként a felhasználónak értesítést kell küldeni a releváns változásokról.
 \item[Detektálási gyakoriság] Egy időintervallum, amilyen időközönként egy adott szócikk változásait ellenőrizni kell. (Ez az intervallum legfeljebb akkora lehet, mint a szócikkhez a felhasználók által beállított legkisebb értesítési gyakoriság.)
-\item[Követés] Amikor alkalmazás detektálási gyakorisággal egy szócikk releváns változásait igyekszik detektálni, akkor az alkalmazás az adott szócikket követi.
+\item[Követés] Amikor az alkalmazás detektálási gyakorisággal egy szócikk releváns változásait igyekszik detektálni, akkor az alkalmazás az adott szócikket követi.
 \item[Feliratkozás] A felhasználók egy szócikkre feliratkozással jelzik, hogy értesülni szeretnének annak releváns változásairól (vagyis az alkalmazás kövesse az adott szócikket).
 \end{description}
 
