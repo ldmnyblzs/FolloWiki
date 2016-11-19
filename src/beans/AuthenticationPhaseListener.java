@@ -10,6 +10,7 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 
 import entities.User;
+import logic.Constant;
 
 
 public class AuthenticationPhaseListener implements PhaseListener {
@@ -32,7 +33,7 @@ public class AuthenticationPhaseListener implements PhaseListener {
         FacesContext fcontext = event.getFacesContext();
         ExternalContext context = event.getFacesContext().getExternalContext();
         String path = context.getRequestPathInfo();
-        User user = (User) context.getSessionMap().get(UserBean.SESSION_KEY);
+        User user = (User) context.getSessionMap().get(Constant.SESSION_KEY);
         
         // Ha publikus oldal: mindig tovabb mehet!        
         if (path.equals(INDEX_SIDE_PATH)
@@ -44,13 +45,13 @@ public class AuthenticationPhaseListener implements PhaseListener {
         // Ha bejelentkezett:
         // - User: foglalo oldal megengedve
         // - Admin: minden oldal megengedve
-        if (context.getSessionMap().containsKey(UserBean.SESSION_KEY)) {
+        if (context.getSessionMap().containsKey(Constant.SESSION_KEY)) {
             
-            if (user.getRole().equals(UserBean.USER_ROLE)
+            if (user.getRole().equals(Constant.USER_ROLE)
                     && path.equals(RESERVE_SIDE_PATH)) {
                 return;
             }
-            else if (user.getRole().equals(UserBean.ADMIN_ROLE)) {
+            else if (user.getRole().equals(Constant.ADMIN_ROLE)) {
                 return;
             }
             else {

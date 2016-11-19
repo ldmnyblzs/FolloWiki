@@ -1,5 +1,9 @@
 package dal;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.faces.application.FacesMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -9,8 +13,10 @@ import javax.persistence.Query;
 import com.sun.xml.rpc.processor.schema.UnimplementedFeatureException;
 
 import entities.User;
+import logic.IAccountManager;
+import logic.UserException;
 
-public class UserManager {
+public class UserManager implements IAccountManager{
 
 	@PersistenceUnit
 	static	EntityManagerFactory emf = 
@@ -19,7 +25,7 @@ public class UserManager {
 	public boolean loginUser(){
 		throw new UnimplementedFeatureException(null);
 	}
-	public void createUser(String username, String pwHash, String email){
+	public User createUser(String username, String pwHash, String email){
 
 		EntityManager em = emf.createEntityManager();
 		User u = new User();
@@ -33,6 +39,8 @@ public class UserManager {
 			em.getTransaction().commit();
 			
 			System.out.println("User '" + username + "' created.");
+			
+			return u;
 	}
 	public void deleteUser(long id){
 
@@ -63,4 +71,68 @@ public class UserManager {
 		System.out.println("User '" + u.getUsername() + "' found by id.");
 		return u;
 	}
+	
+	@Override
+	public User signUp(String username, String password, String password2, String email) throws UserException{
+		User user = getUserByUsername(username);
+		if (user == null) {
+			if (!password.equals(password2)) {
+				throw new UserException("A megadott jelszavak nem egyeznek.");
+			}
+			String pwHash = password;
+			try {
+				user = createUser(username, pwHash, email);
+				return user;
+			} catch (Exception e) {
+				throw new UserException("A felhasználó létrehozása sikertelen!",
+						"Hiba tötrtént a létrehozás közben. Vedd fel a kapcsolatot az adminisztrátorral.");
+			}
+		} else {
+			throw new UserException("A(z) '" + username + "' felhasználónév már foglalt!", "Válassz másik nevet.");
+			
+		}
+	}
+	@Override
+	public void deleteAcc(String username, String password) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void update(String username, String password, String password2, String email) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public User login(String username, String password) throws UserException {
+
+		UserManager um = new UserManager();
+        User user = um.getUserByUsername(username);
+        if (user != null) {
+            if (!user.getPwHash().equals(password)) {
+                /*FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                           "Sikertelen bejelentkezés!",
+                                           "HibĂˇs jelszĂł.");*/
+                throw new UserException("Hibás jelszó");
+            }
+            
+            //context.getExternalContext().getSessionMap().put(SESSION_KEY, user);
+            //return sm.toList();
+            return user;
+        } else {           
+        	throw new UserException(
+                    "Sikertelen bejelentkezés",
+                    "A(z) '"
+                    + username
+                    +
+                    "' felhasználónév már létezik.");
+        }
+		
+	}
+	@Override
+	public void logout() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 }
