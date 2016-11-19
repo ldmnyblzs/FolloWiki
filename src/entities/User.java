@@ -19,6 +19,7 @@ public class User {
 	private String username;
 	private String pwHash;
 	private String email;
+	private String role;
 	private ArrayList<String> notifications;
 	
 	
@@ -51,6 +52,12 @@ public class User {
 	}
 	public void setNotifications(ArrayList<String> notifications) {
 		this.notifications = notifications;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 	

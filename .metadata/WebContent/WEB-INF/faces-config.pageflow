@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14794021228940" configfile="/FolloWiki/WebContent/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="index.xhtml" x="122" y="1522" id="pf14794021408011" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14794021408012 pf14794021408013 pf14794021408014 pf14794021408015 pf14794021408016 pf14794021408017 pf14794021408018 pf14794021408019" path="index.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="nopermission.xhtml" x="338" y="178" id="pf147940214080110" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf14794021408012" path="/nopermission.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="login.xhtml" x="338" y="562" id="pf147940214080111" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" inlinks="pf14794021408013" path="/login.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="usercreate.xhtml" x="338" y="946" id="pf147940214080212" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf14794021408014" path="/usercreate.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="reserve.xhtml" x="338" y="1330" id="pf147940214080213" referenceLink="//@navigationRule.0/@navigationCase.3/@toViewId|" inlinks="pf14794021408015" path="/reserve.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="list.xhtml" x="338" y="1714" id="pf147940214080214" referenceLink="//@navigationRule.0/@navigationCase.4/@toViewId|" inlinks="pf14794021408016" path="/list.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="edit.xhtml" x="338" y="2098" id="pf147940214080215" referenceLink="//@navigationRule.0/@navigationCase.5/@toViewId|" inlinks="pf14794021408017" path="/edit.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="starterServlet" x="338" y="2482" id="pf147940214080216" referenceLink="//@navigationRule.0/@navigationCase.6/@toViewId|" inlinks="pf14794021408018" path="/starterServlet"/>
+  <nodes xsi:type="pageflow:PFPage" name="create.xhtml" x="338" y="2866" id="pf147940214080217" referenceLink="//@navigationRule.0/@navigationCase.7/@toViewId|" inlinks="pf14794021408019" path="/create.xhtml"/>
+  <links id="pf14794021408012" target="pf147940214080110" source="pf14794021408011" outcome="denied" redirect="true"/>
+  <links id="pf14794021408013" target="pf147940214080111" source="pf14794021408011" outcome="signin" redirect="true"/>
+  <links id="pf14794021408014" target="pf147940214080212" source="pf14794021408011" outcome="signup" redirect="true"/>
+  <links id="pf14794021408015" target="pf147940214080213" source="pf14794021408011" outcome="reserve" redirect="true"/>
+  <links id="pf14794021408016" target="pf147940214080214" source="pf14794021408011" outcome="list" redirect="true"/>
+  <links id="pf14794021408017" target="pf147940214080215" source="pf14794021408011" outcome="edit" redirect="true"/>
+  <links id="pf14794021408018" target="pf147940214080216" source="pf14794021408011" outcome="start" redirect="true"/>
+  <links id="pf14794021408019" target="pf147940214080217" source="pf14794021408011" outcome="create" redirect="true"/>
+</pageflow:Pageflow>

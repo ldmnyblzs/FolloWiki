@@ -32,7 +32,20 @@ public class UserManager {
 			em.persist(u);
 			em.getTransaction().commit();
 			
-			System.out.print("User '" + username + "' created.");
+			System.out.println("User '" + username + "' created.");
+	}
+	public void deleteUser(long id){
+
+		EntityManager em = emf.createEntityManager();
+		
+		User u = em.find(User.class, id);
+		String username = u.getUsername();
+		
+		em.getTransaction().begin();
+		em.remove(u);
+		em.getTransaction().commit();
+			
+		System.out.println("User '" + username + "' removed.");
 	}
 	public User getUserByUsername(String username){
 		
@@ -40,6 +53,14 @@ public class UserManager {
 		Query q = em.createNamedQuery("User.username", User.class);
 		q.setParameter("username", username);
 		User u = (User) q.getSingleResult();
+		System.out.println("User '" + u.getUsername() + "' found by name.");
+		return u;
+	}
+	public User getUserById(long id){
+		
+		EntityManager em = emf.createEntityManager();
+		User u = em.find(User.class, id);
+		System.out.println("User '" + u.getUsername() + "' found by id.");
 		return u;
 	}
 }
