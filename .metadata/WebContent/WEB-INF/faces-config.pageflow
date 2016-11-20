@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14794021228940" configfile="/FolloWiki/WebContent/WEB-INF/faces-config.xml">
   <nodes xsi:type="pageflow:PFPage" name="index.xhtml" x="197" y="300" id="pf14794021408011" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14795815627562 pf14795815627563" path="/index.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="nopermission.xhtml" x="156" y="-24" id="pf147958156275610" referenceLink="//@navigationRule.3/@navigationCase.0/@toViewId|" inlinks="pf14795815627562 pf147958173991718 pf147958173991719 pf147958181111224" path="/nopermission.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="nopermission.xhtml" x="144" y="12" id="pf147958156275610" referenceLink="//@navigationRule.3/@navigationCase.0/@toViewId|" inlinks="pf14795815627562 pf147958173991718 pf147958173991719 pf147958181111224" path="/nopermission.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="login.xhtml" x="420" y="300" id="pf147958156275611" referenceLink="//@navigationRule.3/@navigationCase.1/@toViewId|" outlinks="pf147958173991718 pf147958173991720 pf147958173991721" inlinks="pf14795815627563 pf14796325293500 pf14796327269421" path="/login.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="usercreate.xhtml" x="660" y="300" id="pf147958156275612" referenceLink="//@navigationRule.2/@fromViewId|" outlinks="pf147958173991719 pf147958173991722 pf14796325293500" inlinks="pf147958173991720 pf147958173991722" path="/usercreate.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="control.xhtml" x="413" y="-24" id="pf147958156275614" referenceLink="//@navigationRule.3/@fromViewId|" outlinks="pf147958181111224 pf14796327269421" inlinks="pf147958173991721" path="/control.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="control.xhtml" x="432" y="12" id="pf147958156275614" referenceLink="//@navigationRule.3/@fromViewId|" outlinks="pf147958181111224 pf14796327269421" inlinks="pf147958173991721" path="/control.xhtml"/>
   <links id="pf14795815627562" target="pf147958156275610" source="pf14794021408011" outcome="denied" redirect="true"/>
   <links id="pf14795815627563" target="pf147958156275611" source="pf14794021408011" outcome="login" redirect="true"/>
   <links id="pf147958173991718" target="pf147958156275610" source="pf147958156275611" outcome="denied" redirect="true"/>

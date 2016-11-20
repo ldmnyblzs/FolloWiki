@@ -8,22 +8,27 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 
-@Entity
+@Entity 
+@NamedQuery(name="Subscribe.userId", query="SELECT s FROM Subscribe s WHERE s.user.id = :userid") 
 public class Subscribe {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
-	
-	//@ManyToOne
-	//@JoinColumn(name = "USER")
 	private User user;
 	private Article article;
-	private Duration frequency;
+	private int frequency;
+	private int sensitivity;
 	
-	
+	public int getSensitivity() {
+		return sensitivity;
+	}
+	public void setSensitivity(int sensitivity) {
+		this.sensitivity = sensitivity;
+	}
 	public long getId() {
 		return id;
 	}
@@ -42,10 +47,10 @@ public class Subscribe {
 	public void setArticle(Article article) {
 		this.article = article;
 	}
-	public Duration getFrequency() {
+	public int getFrequency() {
 		return frequency;
 	}
-	public void setFrequency(Duration frequency) {
+	public void setFrequency(int frequency) {
 		this.frequency = frequency;
 	}
 	

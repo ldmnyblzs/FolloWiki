@@ -11,6 +11,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
+import dal.SubscribeManager;
 import logic.Constant;
 
 @Entity
@@ -69,7 +70,10 @@ public class User {
 		this.notifications = notifications;
 	}
 	public ArrayList<Subscribe> getSubscribes() {
-		return subscribes;
+		
+		SubscribeManager sm = new SubscribeManager();
+		ArrayList<Subscribe> subs = new ArrayList<Subscribe>(sm.getAllSubscribeByUserId(id));
+		return subs;
 	}
 	public void setSubscribes(ArrayList<Subscribe> subscribes) {
 		this.subscribes = subscribes;

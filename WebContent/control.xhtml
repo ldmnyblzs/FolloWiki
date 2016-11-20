@@ -55,7 +55,7 @@
            <center>
                 <h:form>
                     <input type="hidden" name="selectedScreeningId" value="#{sub.id}" />
-                    <h:commandButton id="submit" type="submit" value="X" action="#{screeningManager.deleteScreening}"/>
+                    <h:commandButton id="submit" type="submit" value="X" action="#{subscibeBean.deleteSubscribe}"/>
                 </h:form>
            </center>
         </h:column>
@@ -75,7 +75,7 @@
 <br/>
 
 <h:form>
-   <h:commandLink type="submit" value="Új vetítés felvétele" action="#{subscribeBean.createSubscribe}"/>
+   <h:commandLink type="submit" value="Új vetítés felvétele" action="create"/>
 </h:form>
 
 <br/>

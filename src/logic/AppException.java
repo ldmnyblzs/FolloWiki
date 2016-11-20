@@ -2,14 +2,14 @@ package logic;
 
 import javax.faces.application.FacesMessage;
 
-public class UserException extends Exception {
+public class AppException extends Exception {
 
 	private FacesMessage message;
 	
-	public UserException(String summary, String details) {
+	public AppException(String summary, String details) {
 		message = new FacesMessage(FacesMessage.SEVERITY_ERROR, summary, details);
 	}
-	public UserException(String summary) {
+	public AppException(String summary) {
 		message = new FacesMessage(summary);
 	}
 	public FacesMessage getErrorMessage(){

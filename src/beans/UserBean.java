@@ -24,7 +24,7 @@ import entities.Subscribe;
 import entities.User;
 import logic.Constant;
 import logic.IAccountManager;
-import logic.UserException;
+import logic.AppException;
 
 @Stateful
 @SessionScoped
@@ -107,7 +107,7 @@ public class UserBean {
 
 			return Constant.CONTROL_KEY;
 
-		} catch (UserException e) {
+		} catch (AppException e) {
 			context.addMessage(null, e.getErrorMessage());
 		}
 		
@@ -120,7 +120,7 @@ public class UserBean {
 			user = am.signUp(username, password, password2, email);
 			return Constant.SIGN_IN_KEY;
 			
-		} catch (UserException e) {
+		} catch (AppException e) {
 			context.addMessage(null, e.getErrorMessage());
 			return Constant.SIGN_UP_KEY;
 		}

@@ -26,7 +26,8 @@ public class AuthenticationPhaseListener implements PhaseListener {
         // Ha publikus oldal: mindig tovabb mehet!        
         if (path.equals(Constant.INDEX_SIDE_PATH)
                 || path.equals(Constant.LOGIN_SIDE_PATH)
-                || path.equals(Constant.SIGN_UP_SIDE_PATH)) {
+                || path.equals(Constant.SIGN_UP_SIDE_PATH)
+                || path.equals(Constant.NO_PERMISSION_SIDE_PATH)) {
             return;
         }
         // Ha bejelentkezett:
@@ -35,7 +36,8 @@ public class AuthenticationPhaseListener implements PhaseListener {
         if (context.getSessionMap().containsKey(Constant.SESSION_KEY)) {
             
             if (user.getRole().equals(Constant.USER_ROLE)
-                    && path.equals(Constant.CONTROL_SIDE_PATH)) {
+                    && (path.equals(Constant.CONTROL_SIDE_PATH)
+                    		|| (path.equals(Constant.SUB_SIDE_PATH)))) {
                 return;
             }
             else if (user.getRole().equals(Constant.ADMIN_ROLE)) {

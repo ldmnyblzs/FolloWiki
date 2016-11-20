@@ -1,5 +1,4 @@
-/entities/
-/META-INF/
 /beans/
-/logic/
 /dal/
+/META-INF/
+/entities/

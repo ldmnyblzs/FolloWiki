@@ -19,7 +19,7 @@ import entities.Subscribe;
 import entities.User;
 import logic.Constant;
 import logic.IAccountManager;
-import logic.UserException;
+import logic.AppException;
 
 public class UserManager implements IAccountManager{
 
@@ -65,15 +65,15 @@ public class UserManager implements IAccountManager{
 		EntityManager em = emf.createEntityManager();
 		Query q = em.createNamedQuery("User.username", User.class);
 		q.setParameter("username", username);
-		User u;
+		Object u;
 		try {
 
-			u = (User) q.getSingleResult();
+			u = q.getSingleResult();
 		} catch (NoResultException e) {
 			return null;			
 		}
-		System.out.println("User '" + u.getUsername() + "' found by name.");
-		return u;
+		System.out.println("User '" + username + "' found by name.");
+		return (User) u;
 	}
 	public User getUserById(long id){
 		
@@ -86,22 +86,22 @@ public class UserManager implements IAccountManager{
 
 	
 	@Override
-	public User signUp(String username, String password, String password2, String email) throws UserException{
+	public User signUp(String username, String password, String password2, String email) throws AppException{
 		User user = getUserByUsername(username);
 		if (user == null) {
 			if (!password.equals(password2)) {
-				throw new UserException("A megadott jelszavak nem egyeznek.");
+				throw new AppException("A megadott jelszavak nem egyeznek.");
 			}
 			String pwHash = password;
 			try {
 				user = createUser(username, pwHash, email, Constant.USER_ROLE);
 				return user;
 			} catch (Exception e) {
-				throw new UserException("A felhasználó létrehozása sikertelen!",
+				throw new AppException("A felhasználó létrehozása sikertelen!",
 						"Hiba tötrtént a létrehozás közben. Vedd fel a kapcsolatot az adminisztrátorral: " + e.getMessage());
 			}
 		} else {
-			throw new UserException("A(z) '" + username + "' felhasználónév már foglalt!", "Válassz másik nevet.");
+			throw new AppException("A(z) '" + username + "' felhasználónév már foglalt!", "Válassz másik nevet.");
 			
 		}
 	}
@@ -116,7 +116,7 @@ public class UserManager implements IAccountManager{
 		
 	}
 	@Override
-	public User login(String username, String password) throws UserException {
+	public User login(String username, String password) throws AppException {
 
 		UserManager um = new UserManager();
         User user = um.getUserByUsername(username);
@@ -125,14 +125,14 @@ public class UserManager implements IAccountManager{
                 /*FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                                            "Sikertelen bejelentkezés!",
                                            "HibĂˇs jelszĂł.");*/
-                throw new UserException("Hibás jelszó");
+                throw new AppException("Hibás jelszó");
             }
             
             //context.getExternalContext().getSessionMap().put(SESSION_KEY, user);
             //return sm.toList();
             return user;
         } else {           
-        	throw new UserException(
+        	throw new AppException(
                     "Sikertelen bejelentkezés",
                     "A(z) '"
                     + username
