@@ -42,20 +42,26 @@
             </center>
         </h:column>
         <h:column>
+            <f:facet name="header">Kezdés</f:facet>
+            <center>
+                <h:outputText value="#{sub.sensitivity}" />
+            </center>
+        </h:column>
+        <h:column>
            <f:facet name="header">Jegyvétel</f:facet>
            <center>
                 <h:form >
                     <input type="hidden" name="selectedScreeningId" value="#{sub.id}" />
-                    <h:commandButton  type="submit" value="$$$" action="control"/>
+                    <h:commandButton disabled="true" type="submit" value="$$$" action="control"/>
                 </h:form>
            </center>
         </h:column>
         <h:column>
-           <f:facet name="header">Törtlés</f:facet>
+           <f:facet name="header">Törlés</f:facet>
            <center>
                 <h:form>
-                    <input type="hidden" name="selectedScreeningId" value="#{sub.id}" />
-                    <h:commandButton id="submit" type="submit" value="X" action="#{subscibeBean.deleteSubscribe}"/>
+                    <input type="hidden" name="selectedSubscribeId" value="#{sub.id}" />
+                    <h:commandButton id="submit" type="submit" value="X" action="#{subscribeBean.deleteSubscribe}"/>
                 </h:form>
            </center>
         </h:column>
@@ -64,7 +70,7 @@
            <center>
                 <h:form>
                     <input type="hidden" name="selectedScreeningId" value="#{sub.id}" />
-                   <h:commandButton type="submit" value="A->B" action="#{subscribeBean.editSubscribe}"/>
+                   <h:commandButton disabled="true" type="submit" value="A->B" action="control"/>
                 </h:form>
            </center>
         </h:column>

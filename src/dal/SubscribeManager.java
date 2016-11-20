@@ -12,6 +12,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 
+import com.sun.xml.rpc.processor.generator.GeneratorUtil.SubclassComparator;
 import com.sun.xml.rpc.processor.schema.UnimplementedFeatureException;
 
 import beans.UserBean;
@@ -76,5 +77,26 @@ public class SubscribeManager {
 		}
 		System.out.println("User '" + u.getUsername() + "' found by name.");
 		return u;
+	}
+	public void deleteSubscribe(long id) {
+
+		EntityManager em = emf.createEntityManager();		
+		em.getTransaction().begin();
+		Subscribe sub = em.find(Subscribe.class, id);
+		em.merge(sub);
+		em.remove(sub);
+		em.getTransaction().commit();
+		
+	}
+	
+	public Subscribe getSubscribeById(long id){
+
+		EntityManager em = emf.createEntityManager();
+		Subscribe sub;
+		em.getTransaction().begin();
+		sub = em.find(Subscribe.class, id);
+		em.getTransaction().commit();
+		
+		return sub;
 	}
 }
