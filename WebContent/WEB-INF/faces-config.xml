@@ -12,15 +12,23 @@
         </phase-listener>
     </lifecycle>
     <navigation-rule>
-    	<from-view-id>index.xhtml</from-view-id>
+    	<from-view-id>/index.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>denied</from-outcome>
             <to-view-id>/nopermission.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>signin</from-outcome>
+            <from-outcome>login</from-outcome>
             <to-view-id>/login.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+    	<from-view-id>/login.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>denied</from-outcome>
+            <to-view-id>/nopermission.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
@@ -29,28 +37,39 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>reserve</from-outcome>
-            <to-view-id>/reserve.xhtml</to-view-id>
+            <from-outcome>control</from-outcome>
+            <to-view-id>/control.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+    	<from-view-id>/usercreate.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>denied</from-outcome>
+            <to-view-id>/nopermission.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>list</from-outcome>
-            <to-view-id>/list.xhtml</to-view-id>
+            <from-outcome>signup</from-outcome>
+            <to-view-id>/usercreate.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>edit</from-outcome>
-            <to-view-id>/edit.xhtml</to-view-id>
+            <from-outcome>login</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+    	<from-view-id>/control.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>denied</from-outcome>
+            <to-view-id>/nopermission.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>start</from-outcome>
-            <to-view-id>/starterServlet</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>create</from-outcome>
-            <to-view-id>/create.xhtml</to-view-id>
+            <from-outcome>login</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>

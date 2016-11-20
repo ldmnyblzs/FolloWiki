@@ -1,18 +1,23 @@
 package dal;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.faces.application.FacesMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 
 import com.sun.xml.rpc.processor.schema.UnimplementedFeatureException;
 
+import entities.Notification;
+import entities.Subscribe;
 import entities.User;
+import logic.Constant;
 import logic.IAccountManager;
 import logic.UserException;
 
@@ -22,10 +27,7 @@ public class UserManager implements IAccountManager{
 	static	EntityManagerFactory emf = 
 		Persistence.createEntityManagerFactory("FolloWikiDB");
 	
-	public boolean loginUser(){
-		throw new UnimplementedFeatureException(null);
-	}
-	public User createUser(String username, String pwHash, String email){
+	public User createUser(String username, String pwHash, String email, String role){
 
 		EntityManager em = emf.createEntityManager();
 		User u = new User();
@@ -33,6 +35,9 @@ public class UserManager implements IAccountManager{
 			u.setUsername(username);
 			u.setPwHash(pwHash);
 			u.setEmail(email);
+			//u.setRole(role);
+			u.setRole(Constant.USER_ROLE);
+			u.setNotifications(new ArrayList<Notification>());
 			
 			em.getTransaction().begin();
 			em.persist(u);
@@ -60,7 +65,13 @@ public class UserManager implements IAccountManager{
 		EntityManager em = emf.createEntityManager();
 		Query q = em.createNamedQuery("User.username", User.class);
 		q.setParameter("username", username);
-		User u = (User) q.getSingleResult();
+		User u;
+		try {
+
+			u = (User) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;			
+		}
 		System.out.println("User '" + u.getUsername() + "' found by name.");
 		return u;
 	}
@@ -72,6 +83,8 @@ public class UserManager implements IAccountManager{
 		return u;
 	}
 	
+
+	
 	@Override
 	public User signUp(String username, String password, String password2, String email) throws UserException{
 		User user = getUserByUsername(username);
@@ -81,11 +94,11 @@ public class UserManager implements IAccountManager{
 			}
 			String pwHash = password;
 			try {
-				user = createUser(username, pwHash, email);
+				user = createUser(username, pwHash, email, Constant.USER_ROLE);
 				return user;
 			} catch (Exception e) {
 				throw new UserException("A felhasználó létrehozása sikertelen!",
-						"Hiba tötrtént a létrehozás közben. Vedd fel a kapcsolatot az adminisztrátorral.");
+						"Hiba tötrtént a létrehozás közben. Vedd fel a kapcsolatot az adminisztrátorral: " + e.getMessage());
 			}
 		} else {
 			throw new UserException("A(z) '" + username + "' felhasználónév már foglalt!", "Válassz másik nevet.");
@@ -124,7 +137,7 @@ public class UserManager implements IAccountManager{
                     "A(z) '"
                     + username
                     +
-                    "' felhasználónév már létezik.");
+                    "' felhasználónév nem létezik.");
         }
 		
 	}
@@ -133,6 +146,5 @@ public class UserManager implements IAccountManager{
 		// TODO Auto-generated method stub
 		
 	}
-	
 	
 }

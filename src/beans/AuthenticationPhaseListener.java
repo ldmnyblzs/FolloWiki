@@ -14,19 +14,7 @@ import logic.Constant;
 
 
 public class AuthenticationPhaseListener implements PhaseListener {
-    
-    
-    private static final String LOGIN_SIDE_KEY = "signin";
-    //private static final String NO_PERMISSION_SIDE_KEY = "denied";
-    //private static final String LIST_SIDE_KEY = "list";
-    
-    private static final String RESERVE_SIDE_PATH = "/reserve.xhtml";
-    private static final String LOGIN_SIDE_PATH = "/login.xhtml";
-    private static final String SIGN_UP_SIDE_PATH = "/usercreate.xhtml";
-    private static final String LIST_SIDE_PATH = "/list.xhtml";
-    private static final String INDEX_SIDE_PATH = "/index.xhtml";
-    private static final String NO_PERMISSION_SIDE_PATH = "/cinema/nopermission.xhtml";
-    
+        
     // --- IMPLEMENTALT METODUSOK --- //
     
     public void afterPhase(PhaseEvent event) {
@@ -36,10 +24,9 @@ public class AuthenticationPhaseListener implements PhaseListener {
         User user = (User) context.getSessionMap().get(Constant.SESSION_KEY);
         
         // Ha publikus oldal: mindig tovabb mehet!        
-        if (path.equals(INDEX_SIDE_PATH)
-                || path.equals(LIST_SIDE_PATH)
-                || path.equals(LOGIN_SIDE_PATH)
-                || path.equals(SIGN_UP_SIDE_PATH)) {
+        if (path.equals(Constant.INDEX_SIDE_PATH)
+                || path.equals(Constant.LOGIN_SIDE_PATH)
+                || path.equals(Constant.SIGN_UP_SIDE_PATH)) {
             return;
         }
         // Ha bejelentkezett:
@@ -48,7 +35,7 @@ public class AuthenticationPhaseListener implements PhaseListener {
         if (context.getSessionMap().containsKey(Constant.SESSION_KEY)) {
             
             if (user.getRole().equals(Constant.USER_ROLE)
-                    && path.equals(RESERVE_SIDE_PATH)) {
+                    && path.equals(Constant.CONTROL_SIDE_PATH)) {
                 return;
             }
             else if (user.getRole().equals(Constant.ADMIN_ROLE)) {
@@ -57,7 +44,7 @@ public class AuthenticationPhaseListener implements PhaseListener {
             else {
                 try {
                     fcontext.responseComplete();
-                    context.redirect(NO_PERMISSION_SIDE_PATH);
+                    context.redirect(Constant.NO_PERMISSION_SIDE_PATH);
                 } catch (IOException ex) {
                     Logger.getLogger(AuthenticationPhaseListener.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -67,7 +54,7 @@ public class AuthenticationPhaseListener implements PhaseListener {
         else {
             fcontext.responseComplete();              
             fcontext.getApplication().getNavigationHandler()
-                    .handleNavigation(fcontext, null, LOGIN_SIDE_KEY);
+                    .handleNavigation(fcontext, null, Constant.SIGN_IN_KEY);
         }
     }
     

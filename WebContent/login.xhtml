@@ -35,14 +35,14 @@
     <h:form id="login">
         <h:panelGrid columns="2" border="0">
             Felhasználónév: <h:inputText id="username" 
-                                   value="#{login.username}"/>        
+                                   value="#{userBean.username}"/>        
             Jelszó: <h:inputSecret id="password"
-                                     value="#{login.password}"/>
+                                     value="#{userBean.password}"/>
         </h:panelGrid>
         <h:commandButton id="submit" 
                          type="submit"
                          value="Belépés"
-                         action="#{login.signInUser}"/>
+                         action="#{userBean.login}"/>
         <br/>
         <br/>
         <h:commandLink id="signup"

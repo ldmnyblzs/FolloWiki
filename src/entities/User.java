@@ -6,7 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+
+import logic.Constant;
 
 @Entity
 @NamedQuery(name="User.username", query="SELECT u FROM User u WHERE u.username = :username") 
@@ -20,7 +25,11 @@ public class User {
 	private String pwHash;
 	private String email;
 	private String role;
-	private ArrayList<String> notifications;
+	//@ManyToMany
+	private ArrayList<Notification> notifications;
+	//@OneToMany(mappedBy = "user")
+	//@JoinColumn(name = "SUBSCRIBE")
+	private ArrayList<Subscribe> subscribes;
 	
 	
 	public long getId() {
@@ -47,18 +56,25 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public ArrayList<String> getNotifications() {
-		return notifications;
-	}
-	public void setNotifications(ArrayList<String> notifications) {
-		this.notifications = notifications;
-	}
 	public String getRole() {
 		return role;
 	}
 	public void setRole(String role) {
 		this.role = role;
 	}
+	public ArrayList<Notification> getNotifications() {
+		return notifications;
+	}
+	public void setNotifications(ArrayList<Notification> notifications) {
+		this.notifications = notifications;
+	}
+	public ArrayList<Subscribe> getSubscribes() {
+		return subscribes;
+	}
+	public void setSubscribes(ArrayList<Subscribe> subscribes) {
+		this.subscribes = subscribes;
+	}
 	
+
 	
 }

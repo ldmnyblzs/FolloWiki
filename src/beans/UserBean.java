@@ -1,6 +1,8 @@
 package beans;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -18,6 +20,7 @@ import javax.transaction.RollbackException;
 import javax.transaction.UserTransaction;
 
 import dal.UserManager;
+import entities.Subscribe;
 import entities.User;
 import logic.Constant;
 import logic.IAccountManager;
@@ -25,7 +28,7 @@ import logic.UserException;
 
 @Stateful
 @SessionScoped
-@ManagedBean(name = "login")
+@ManagedBean(name = "userBean")
 public class UserBean {
 
 	@Resource
@@ -39,9 +42,7 @@ public class UserBean {
 
 	private String username;
 	private String password;
-	private String passwordv;
-	private String fname;
-	private String lname;
+	private String password2;
 	private String email;
 
 	private static boolean start = true;
@@ -64,29 +65,14 @@ public class UserBean {
 		this.password = password;
 	}
 
-	public String getPasswordv() {
-		return passwordv;
+	public String getPassword2() {
+		return password2;
 	}
 
-	public void setPasswordv(String passwordv) {
-		this.passwordv = passwordv;
+	public void setPassword2(String password2) {
+		this.password2 = password2;
 	}
 
-	public String getFname() {
-		return fname;
-	}
-
-	public void setFname(String fname) {
-		this.fname = fname;
-	}
-
-	public String getLname() {
-		return lname;
-	}
-
-	public void setLname(String lname) {
-		this.lname = lname;
-	}
 
 	public String getEmail() {
 		return email;
@@ -96,48 +82,48 @@ public class UserBean {
 		this.email = email;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	// --- FONTOSABB METODUSOK --- //
 
-	public String setAccountManager(String loginMethod){
-
-		switch (loginMethod) {
-		case "applogin":
-			am = new UserManager();
-			break;
-
-		case "wikilogin":
-			
-			break;
-			
-		case "fblogin":
-			
-			break;
-
-		default:
-			break;
-		}
-		String x = Constant.SIGN_IN;
-		return x;
+	public String setAppLogin() {
+		am = new UserManager();
+		return Constant.SIGN_IN_KEY;
 	}
-	
+
 	public String login() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		try {
-			
+
 			user = am.login(username, password);
-			
+
+			context.getExternalContext().getSessionMap().put(Constant.SESSION_KEY, user);
+
+			return Constant.CONTROL_KEY;
+
 		} catch (UserException e) {
 			context.addMessage(null, e.getErrorMessage());
 		}
-		context.getExternalContext().getSessionMap().put(Constant.SESSION_KEY, user);
 		
-		return Constant.CONTROL_PANEL;
+		return Constant.SIGN_IN_KEY;
 	}
 
 	public String signUpUser() {
 		FacesContext context = FacesContext.getCurrentInstance();
-		
-		return null;
+		try {
+			user = am.signUp(username, password, password2, email);
+			return Constant.SIGN_IN_KEY;
+			
+		} catch (UserException e) {
+			context.addMessage(null, e.getErrorMessage());
+			return Constant.SIGN_UP_KEY;
+		}
 	}
 
 	public String logout() {
@@ -145,10 +131,10 @@ public class UserBean {
 		if (session != null) {
 			session.invalidate();
 		}
-		return "login";
+		return Constant.SIGN_IN_KEY;
 
 	}
-
+	
 	// --- EGYEB METODUSOK --- //
 
 	/*
@@ -171,7 +157,7 @@ public class UserBean {
 	 * ex); }
 	 * 
 	 * fname = "asd"; lname = "asd"; username = "asd"; password = "asd";
-	 * passwordv = "asd";
+	 * password2 = "asd";
 	 * 
 	 * signUpUser();
 	 * 
