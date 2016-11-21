@@ -1,45 +1,49 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:c="http://java.sun.com/jsp/jstl/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      lang="hu">
-    <h:head>
-        <ui:include src="mystyle.xhtml"/>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <title>J2EE HF: Moziműsor</title>
-    </h:head>
-    <h:body>
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets" lang="hu">
+<h:head>
+	<ui:include src="mystyle.xhtml" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>FolloWiki</title>
+</h:head>
+<h:body>
 
-        <div class="focim">Moziműsor</div>
-        
-        <br/>
-        <br/>
-        <br/>
-        
-        <div class="vekonycontainer">
-            <div class="keret">
-                <center>
-                    <div class="kitoltes">
-                        Köszöntő
-                    </div>
+	<div class="focim">FolloWiki</div>
 
-                    <br/>
+	<br />
+	<br />
+	<br />
 
-                    <h:form>
-                        Üdvözöllek a magánmozim honlapján!
-                        <br/>
-                        Nézz szét a hamarosan vetítésre kerülő filmek között
-                        <h:commandLink id="list"
-                                       value="itt"
-                                       action="#{userBean.setAppLogin}"/>!
-                    </h:form>
+	<div class="vekonycontainer">
+		<div class="keret">
+			<center>
+				<div class="kitoltes">Köszöntő</div>
 
-                    <br/>
-                </center>
-            </div>
-        </div>
-    </h:body>
+				<br />
+
+				<h:form>
+                        Üdvözöllek a FolloWiki honlapján!
+                        <br />
+                        Bejelentkezés után iratkozz fel kedvenc Wikipédia-cikkjeidre, amikről értesítést szeretnél kapni.
+                        <br />
+
+					<h:commandButton disabled="true" id="fb" value="Facebook login"
+						action="#{userBean.setAppLogin}" />  
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <h:commandButton disabled="true" id="list"
+						value="Wikipedia login" action="#{userBean.setAppLogin}" />  
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <h:commandButton id="fw" value="FolloWiki login"
+						action="#{userBean.setAppLogin}" />
+				</h:form>
+
+				<br />
+			</center>
+		</div>
+	</div>
+</h:body>
 </html>

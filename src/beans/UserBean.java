@@ -1,26 +1,15 @@
 package beans;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.Serializable;
 import javax.annotation.Resource;
 import javax.ejb.Stateful;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpSession;
-import javax.transaction.RollbackException;
 import javax.transaction.UserTransaction;
 
 import dal.UserManager;
-import entities.Subscribe;
 import entities.User;
 import logic.Constant;
 import logic.IAccountManager;
@@ -29,12 +18,15 @@ import logic.AppException;
 @Stateful
 @SessionScoped
 @ManagedBean(name = "userBean")
-public class UserBean {
+public class UserBean implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -600377825227986561L;
 
 	@Resource
 	private UserTransaction utx;
-	// @ManagedProperty(value="#{screeningManager}")
-	// private ScreeningManager sm;
 
 	private IAccountManager am;
 
@@ -44,8 +36,6 @@ public class UserBean {
 	private String password;
 	private String password2;
 	private String email;
-
-	private static boolean start = true;
 
 	// --- GETTER SETTER --- //
 
@@ -73,7 +63,6 @@ public class UserBean {
 		this.password2 = password2;
 	}
 
-
 	public String getEmail() {
 		return email;
 	}
@@ -90,7 +79,7 @@ public class UserBean {
 		this.user = user;
 	}
 
-	// --- FONTOSABB METODUSOK --- //
+	// --- METODUSOK --- //
 
 	public String setAppLogin() {
 		am = new UserManager();
@@ -98,6 +87,12 @@ public class UserBean {
 	}
 
 	public String login() {
+
+		user = null;
+
+		if (am == null)
+			am = new UserManager();
+
 		FacesContext context = FacesContext.getCurrentInstance();
 		try {
 
@@ -110,16 +105,19 @@ public class UserBean {
 		} catch (AppException e) {
 			context.addMessage(null, e.getErrorMessage());
 		}
-		
+
 		return Constant.SIGN_IN_KEY;
 	}
 
 	public String signUpUser() {
 		FacesContext context = FacesContext.getCurrentInstance();
+		if (am == null)
+			am = new UserManager();
+
 		try {
 			user = am.signUp(username, password, password2, email);
 			return Constant.SIGN_IN_KEY;
-			
+
 		} catch (AppException e) {
 			context.addMessage(null, e.getErrorMessage());
 			return Constant.SIGN_UP_KEY;
@@ -131,50 +129,8 @@ public class UserBean {
 		if (session != null) {
 			session.invalidate();
 		}
-		return Constant.SIGN_IN_KEY;
+		this.user = null;
+		return Constant.INDEX_SIDE_PATH;
 
 	}
-	
-	// --- EGYEB METODUSOK --- //
-
-	/*
-	 * private User getUser() { try { User user = (User)
-	 * em.createNamedQuery("CUser.findByUsername"). setParameter("username",
-	 * username).getSingleResult(); return user; } catch (NoResultException nre)
-	 * { return null; } }
-	 */
-
-	/*
-	 * public String firstUsers() throws RollbackException {
-	 * 
-	 * if(start){
-	 * 
-	 * User user = new User();
-	 * 
-	 * 
-	 * try { utx.begin(); em.persist(user); utx.commit(); } catch (Exception ex)
-	 * { //Logger.getLogger(UserManager.class.getName()).log(Level.SEVERE, null,
-	 * ex); }
-	 * 
-	 * fname = "asd"; lname = "asd"; username = "asd"; password = "asd";
-	 * password2 = "asd";
-	 * 
-	 * signUpUser();
-	 * 
-	 * //sm.firstScreenings();
-	 * 
-	 * start = false; }
-	 * 
-	 * //return sm.toList(); return null; }
-	 */
-
-	// --- GETTER SETTER --- //
-
-	/*
-	 * public ScreeningManager getSm() { return sm; }
-	 */
-
-	/*
-	 * public void setSm(ScreeningManager sm) { this.sm = sm; }
-	 */
 }
