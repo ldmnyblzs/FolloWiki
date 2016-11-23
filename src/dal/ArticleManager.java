@@ -1,7 +1,9 @@
 package dal;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
@@ -10,11 +12,14 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 
 import entities.Article;
-import entities.Notification;
-import entities.User;
-import logic.Constant;
 
-public class ArticleManager {
+@Stateless
+public class ArticleManager implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3459609416021775604L;
 
 	@PersistenceUnit
 	static EntityManagerFactory emf = Persistence.createEntityManagerFactory("FolloWikiDB");
@@ -31,7 +36,6 @@ public class ArticleManager {
 		} catch (NoResultException e) {
 			return null;
 		}
-		System.out.println("Article '" + a.getUrl() + "' found by name.");
 		return a;
 	}
 
@@ -46,8 +50,6 @@ public class ArticleManager {
 		em.getTransaction().begin();
 		em.persist(a);
 		em.getTransaction().commit();
-
-		System.out.println("Article '" + url + "' created.");
 
 		return a;
 	}

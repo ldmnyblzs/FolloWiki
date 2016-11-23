@@ -21,36 +21,32 @@
 	<div class="vekonycontainer">
 		<div class="keret">
 			<center>
-				<div class="kitoltes">Bejelentkezés</div>
+				<div class="kitoltes">Módosítás</div>
 
 				<br />
-
-
 				<f:view>
-					<h:messages style="color: red" showDetail="true" />
-					<h:form id="login">
+					<h:form>
 						<h:panelGrid columns="2" border="0">
-            Felhasználónév: <h:inputText id="username"
-								value="#{userBean.username}" />        
-            Jelszó: <h:inputSecret id="password"
-								value="#{userBean.password}" />
+            Cím: <h:outputText id="url" value="#{subscribeBean.url}" />
+            Gyakoriság: <h:inputText id="frequecy"
+								value="#{subscribeBean.frequency}" />
+            Érzékenység: <h:inputText id="sensitivity"
+								value="#{subscribeBean.sensitivity}" />
 						</h:panelGrid>
-						<h:commandButton id="submit" type="submit" value="Belépés"
-							action="#{userBean.login}" />
 						<br />
 						<br />
-						<h:commandLink id="signup"
-							value="Új felhasználói fiók létrehozása" action="signup" />
+
+						<h:inputHidden id="id" value="#{subscribeBean.id}" />
+						<h:commandButton id="submit" type="submit" value="Módosít"
+							action="#{subscribeBean.updateSubscribe}" />
 					</h:form>
-
 					<br />
-
-
-
+					<h:form>
+						<h:commandLink id="list" value="Vissza a feliratkozásokhoz!"
+							action="control" />
+					</h:form>
 					<br />
-
 				</f:view>
-
 
 			</center>
 		</div>

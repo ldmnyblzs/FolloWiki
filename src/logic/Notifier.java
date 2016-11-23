@@ -1,32 +1,33 @@
 package logic;
 
 // File Name SendEmail.java
+import java.util.Properties;
 
-import java.util.*;
-import javax.mail.*;
-import javax.mail.internet.*;
-
-import dal.UserManager;
-import entities.User;
-
-import javax.activation.*;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 @Singleton
 public class Notifier {
-	
-	@Schedule(minute="*/15")
-	public void userNotify(){
-		UserManager um = new UserManager();
-		//ArrayList<User> ua = um.getAllUsers();
-		//User u = new User();
-		//u.getNotifications().get(0)
+
+	@Schedule(minute = "*/15")
+	public void userNotify() {
+		// UserManager um = new UserManager();
+		// ArrayList<User> ua = um.getAllUsers();
+		// User u = new User();
+		// u.getNotifications().get(0)
 	}
-	
-	public void sendEmail(String to, String subject, String msg){
+
+	public void sendEmail(String to, String subject, String msg) {
 		sendEmail(to, subject, msg, "localhost", "d.bogancs@gmail.com");
 	}
+
+	// COPY-PASTE
 	public void sendEmail(String to, String subject, String msg, String host, String from) {
 
 		// Get system properties

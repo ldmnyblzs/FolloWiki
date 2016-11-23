@@ -77,9 +77,27 @@
             <to-view-id>/login.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>edit</from-outcome>
+            <to-view-id>/edit.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
     <navigation-rule>
     	<from-view-id>/sub.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>denied</from-outcome>
+            <to-view-id>/nopermission.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>control</from-outcome>
+            <to-view-id>/control.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+    	<from-view-id>/edit.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>denied</from-outcome>
             <to-view-id>/nopermission.xhtml</to-view-id>
