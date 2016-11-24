@@ -11,8 +11,6 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 
-import com.sun.xml.rpc.processor.schema.UnimplementedFeatureException;
-
 import entities.Article;
 import entities.Subscribe;
 import entities.User;
@@ -52,7 +50,7 @@ public class SubscribeManager implements Serializable {
 	}
 
 	public List<Subscribe> getAllSubscribeByArtikel() {
-		throw new UnimplementedFeatureException(null);
+		throw new UnsupportedOperationException();
 	}
 
 	public List<Subscribe> getAllSubscribeByUserId(long id) {
