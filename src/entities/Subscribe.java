@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
@@ -28,9 +29,9 @@ public class Subscribe implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	@Column(unique=true, nullable=false) 
+	@JoinColumn(unique=true, nullable=false) 
 	private User user;
-	@Column(unique=true, nullable=false) 
+	@JoinColumn(unique=true, nullable=false) 
 	private Article article;
 	@Column(nullable=false) 
 	private int frequency;

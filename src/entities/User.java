@@ -16,7 +16,7 @@ import dal.SubscribeManager;
 @Entity
 @NamedQueries({
 	@NamedQuery(name = "User.username", query = "SELECT u FROM User u WHERE u.username = :username"),
-	@NamedQuery(name = "User.all", query = "SELECT u FROM User")
+	@NamedQuery(name = "User.all", query = "SELECT u FROM User u")
 })
 public class User implements Serializable {
 
@@ -95,6 +95,7 @@ public class User implements Serializable {
 		SubscribeManager sm = new SubscribeManager();
 		ArrayList<Subscribe> subs = new ArrayList<Subscribe>(sm.getAllSubscribeByUserId(id));
 		return subs;
+		//return subscribes;
 	}
 
 	public void setSubscribes(ArrayList<Subscribe> subscribes) {
