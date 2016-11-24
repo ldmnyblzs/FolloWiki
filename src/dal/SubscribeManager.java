@@ -158,4 +158,20 @@ public class SubscribeManager implements Serializable {
 		}
 		
 	}
+
+	public Subscribe getSubscribeByUserIdAndUrl(long userId, String url) {
+		EntityManager em = emf.createEntityManager();
+		Query q = em.createNamedQuery("Subscribe.userIdAndUrl", Subscribe.class);
+		q.setParameter("userid", userId);
+		q.setParameter("url", url);
+		Subscribe sub;
+		try {
+
+			Subscribe resultList = (Subscribe) q.getSingleResult();
+			sub = resultList;
+		} catch (NoResultException e) {
+			return null;
+		}
+		return sub;
+	}
 }

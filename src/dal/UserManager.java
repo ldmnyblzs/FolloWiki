@@ -2,6 +2,7 @@ package dal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -93,7 +94,6 @@ public class UserManager implements IAccountManager, Serializable {
 		} catch (NoResultException e) {
 			return null;
 		}
-		System.out.println("User '" + username + "' found by name.");
 		return (User) u;
 	}
 
@@ -169,6 +169,21 @@ public class UserManager implements IAccountManager, Serializable {
 	public void logout() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<User> getAllUser() {
+		
+		EntityManager em = emf.createEntityManager();
+		Query q = em.createNamedQuery("User.all", User.class);
+		List<User> users;
+		try {
+
+			users = q.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return users;
 	}
 
 }
