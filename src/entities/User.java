@@ -3,6 +3,7 @@ package entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,9 +25,13 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
+	@Column(unique=true, nullable=false) 
 	private String username;
+	@Column(nullable=false) 
 	private String pwHash;
+	@Column(unique=true, nullable=false) 
 	private String email;
+	@Column(nullable=false) 
 	private String role;
 	private ArrayList<Notification> notifications;
 

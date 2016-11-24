@@ -2,14 +2,20 @@ package entities;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQuery(name = "Subscribe.userId", query = "SELECT s FROM Subscribe s WHERE s.user.id = :userid")
+@NamedQueries( {
+	@NamedQuery(name = "Subscribe.userId", query = "SELECT s FROM Subscribe s WHERE s.user.id = :userid"),
+	@NamedQuery(name = "User.articleUrl", query = "SELECT s.user FROM Subscribe s WHERE s.article.url = :url"),
+	@NamedQuery(name = "ArticleUrl.toSubsbribe", query = "SELECT s.article.url FROM Subscribe s")
+})
 public class Subscribe implements Serializable {
 
 	/**
@@ -20,9 +26,13 @@ public class Subscribe implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
+	@Column(unique=true, nullable=false) 
 	private User user;
+	@Column(unique=true, nullable=false) 
 	private Article article;
+	@Column(nullable=false) 
 	private int frequency;
+	@Column(nullable=false) 
 	private int sensitivity;
 
 	public int getSensitivity() {

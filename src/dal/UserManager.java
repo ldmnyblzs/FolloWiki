@@ -63,6 +63,24 @@ public class UserManager implements IAccountManager, Serializable {
 		System.out.println("User '" + username + "' removed.");
 	}
 
+	public void updateUser(long id, String username, String pwHash, String email, ArrayList<Notification> notifications){
+
+		EntityManager em = emf.createEntityManager();
+
+		em.getTransaction().begin();
+
+		User user = em.find(User.class, id);
+		user.setUsername(username);
+		user.setPwHash(pwHash);
+		user.setEmail(email);
+		user.setNotifications(notifications);
+		em.merge(user);
+		em.persist(user);
+
+		em.getTransaction().commit();
+
+	}
+	
 	public User getUserByUsername(String username) {
 
 		EntityManager em = emf.createEntityManager();
@@ -112,7 +130,7 @@ public class UserManager implements IAccountManager, Serializable {
 	}
 
 	@Override
-	public void deleteAcc(String username, String password) {
+	public void delete(String username, String password) {
 		// TODO Auto-generated method stub
 
 	}
