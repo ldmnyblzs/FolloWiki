@@ -23,4 +23,6 @@ public final class Constant {
 	public static final String SIGN_IN_KEY = "login";
 	public static final String SIGN_UP_KEY = "signup";
 	// private static final String NO_PERMISSION_SIDE_KEY = "denied";
+	
+	public static final String SERVER_EMAIL = "d.bogancs@gmail.com";
 }

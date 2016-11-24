@@ -12,6 +12,7 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 
 import entities.Article;
+import entities.Notification;
 
 @Stateless
 public class ArticleManager implements Serializable {
@@ -45,7 +46,7 @@ public class ArticleManager implements Serializable {
 		Article a = new Article();
 
 		a.setUrl(url);
-		a.setDifferences(new ArrayList<String>());
+		a.setChanges(new ArrayList<Notification>());
 
 		em.getTransaction().begin();
 		em.persist(a);

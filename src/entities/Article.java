@@ -3,6 +3,7 @@ package entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,9 +22,9 @@ public class Article implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-
+	@Column(unique=true, nullable=false) 
 	private String url;
-	private ArrayList<String> differences;
+	private ArrayList<Notification> changes;
 
 	public long getId() {
 		return id;
@@ -41,12 +42,12 @@ public class Article implements Serializable {
 		this.url = url;
 	}
 
-	public ArrayList<String> getDifferences() {
-		return differences;
+	public ArrayList<Notification> getChanges() {
+		return changes;
 	}
 
-	public void setDifferences(ArrayList<String> differences) {
-		this.differences = differences;
+	public void setChanges(ArrayList<Notification> changes) {
+		this.changes = changes;
 	}
 
 }

@@ -1,15 +1,24 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQuery(name = "Subscribe.userId", query = "SELECT s FROM Subscribe s WHERE s.user.id = :userid")
+@NamedQueries( {
+	@NamedQuery(name = "Subscribe.userId", query = "SELECT s FROM Subscribe s WHERE s.user.id = :userid"),
+	@NamedQuery(name = "User.articleUrl", query = "SELECT s.user FROM Subscribe s WHERE s.article.url = :url"),
+	@NamedQuery(name = "ArticleUrl.toSubsbribe", query = "SELECT s.article.url FROM Subscribe s"),
+	@NamedQuery(name = "Subscribe.userIdAndUrl", query = "SELECT s FROM Subscribe s WHERE s.article.url = :url AND s.user.id = :userId")
+})
 public class Subscribe implements Serializable {
 
 	/**
@@ -20,9 +29,13 @@ public class Subscribe implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
+	@JoinColumn(unique=true, nullable=false) 
 	private User user;
+	@JoinColumn(unique=true, nullable=false) 
 	private Article article;
+	@Column(nullable=false) 
 	private int frequency;
+	@Column(nullable=false) 
 	private int sensitivity;
 
 	public int getSensitivity() {
@@ -58,7 +71,11 @@ public class Subscribe implements Serializable {
 	}
 
 	public int getFrequency() {
-		return frequency;
+		if(frequency > 44640) return 44640;
+		else if(frequency > 10080) return 10080;
+		else if(frequency > 1440) return 1440;
+		else if(frequency > 60) return 60;
+		else return 15;
 	}
 
 	public void setFrequency(int frequency) {

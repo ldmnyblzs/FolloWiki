@@ -3,6 +3,7 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -16,10 +17,15 @@ public class Notification implements Serializable {
 	@Id
 	long id;
 	int diffCharSum;
-	String originalText;
-	String newText;
-	Date oldaDate;
-	Date newDate;
+	// String originalText;
+	// String newText;
+	@Column(nullable=false) 
+	Date date;
+	String comment;
+	@Column(nullable=false) 
+	String url;
+	@Column(nullable=false) 
+	String title;
 
 	public long getId() {
 		return id;
@@ -37,35 +43,36 @@ public class Notification implements Serializable {
 		this.diffCharSum = diffCharSum;
 	}
 
-	public String getOriginalText() {
-		return originalText;
+	public Date getDate() {
+		return date;
 	}
 
-	public void setOriginalText(String originalText) {
-		this.originalText = originalText;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
-	public String getNewText() {
-		return newText;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setNewText(String newText) {
-		this.newText = newText;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
-	public Date getOldaDate() {
-		return oldaDate;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setOldaDate(Date oldaDate) {
-		this.oldaDate = oldaDate;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
-	public Date getNewDate() {
-		return newDate;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setNewDate(Date newDate) {
-		this.newDate = newDate;
+	public void setTitle(String title) {
+		this.title = title;
 	}
+
 }

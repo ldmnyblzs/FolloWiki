@@ -2,6 +2,7 @@ package dal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -10,6 +11,11 @@ import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
 
 import entities.Notification;
 import entities.User;
@@ -63,20 +69,45 @@ public class UserManager implements IAccountManager, Serializable {
 		System.out.println("User '" + username + "' removed.");
 	}
 
+	public void updateUser(long id, String username, String pwHash, String email, ArrayList<Notification> notifications){
+
+		EntityManager em = emf.createEntityManager();
+
+		em.getTransaction().begin();
+
+		User user = em.find(User.class, id);
+		user.setUsername(username);
+		user.setPwHash(pwHash);
+		user.setEmail(email);
+		user.setNotifications(notifications);
+		em.merge(user);
+		em.persist(user);
+
+		em.getTransaction().commit();
+
+	}
+	
 	public User getUserByUsername(String username) {
 
 		EntityManager em = emf.createEntityManager();
 		Query q = em.createNamedQuery("User.username", User.class);
 		q.setParameter("username", username);
-		Object u;
+		User u;
 		try {
 
-			u = q.getSingleResult();
+			//u = q.getSingleResult();
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery<User> q2 = cb.createQuery(User.class);
+			Root<User> ru = q2.from(User.class);
+			ParameterExpression<String> p = cb.parameter(String.class);
+			q2.select(ru).where(cb.equal(ru.get("username"), p));
+			TypedQuery<User> q3 = em.createQuery(q2);
+			q3.setParameter(p, username);
+			u = q3.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
-		System.out.println("User '" + username + "' found by name.");
-		return (User) u;
+		return u;
 	}
 
 	public User getUserById(long id) {
@@ -112,7 +143,7 @@ public class UserManager implements IAccountManager, Serializable {
 	}
 
 	@Override
-	public void deleteAcc(String username, String password) {
+	public void delete(String username, String password) {
 		// TODO Auto-generated method stub
 
 	}
@@ -151,6 +182,21 @@ public class UserManager implements IAccountManager, Serializable {
 	public void logout() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<User> getAllUser() {
+		
+		EntityManager em = emf.createEntityManager();
+		Query q = em.createNamedQuery("User.all", User.class);
+		List<User> users;
+		try {
+
+			users = q.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+		return users;
 	}
 
 }

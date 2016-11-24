@@ -3,16 +3,21 @@ package entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 import dal.SubscribeManager;
 
 @Entity
-@NamedQuery(name = "User.username", query = "SELECT u FROM User u WHERE u.username = :username")
+@NamedQueries({
+	@NamedQuery(name = "User.username", query = "SELECT u FROM User u WHERE u.username = :username"),
+	@NamedQuery(name = "User.all", query = "SELECT u FROM User u")
+})
 public class User implements Serializable {
 
 	/**
@@ -24,9 +29,13 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
+	@Column(unique = true, nullable = false)
 	private String username;
+	@Column(nullable = false)
 	private String pwHash;
+	@Column(unique = true, nullable = false)
 	private String email;
+	@Column(nullable = false)
 	private String role;
 	private ArrayList<Notification> notifications;
 
@@ -86,6 +95,7 @@ public class User implements Serializable {
 		SubscribeManager sm = new SubscribeManager();
 		ArrayList<Subscribe> subs = new ArrayList<Subscribe>(sm.getAllSubscribeByUserId(id));
 		return subs;
+		//return subscribes;
 	}
 
 	public void setSubscribes(ArrayList<Subscribe> subscribes) {

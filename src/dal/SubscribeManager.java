@@ -1,6 +1,7 @@
 package dal;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -12,6 +13,7 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 
 import entities.Article;
+import entities.Notification;
 import entities.Subscribe;
 import entities.User;
 
@@ -48,8 +50,42 @@ public class SubscribeManager implements Serializable {
 
 		return sub;
 	}
+	
+	public List<User> getAllSubscribedUserByArticle(String url) {
 
-	public List<Subscribe> getAllSubscribeByArtikel() {
+		EntityManager em = emf.createEntityManager();
+		Query q = em.createNamedQuery("User.articleUrl", User.class);
+		q.setParameter("url", url);
+		List<User> users;
+		try {
+			@SuppressWarnings("unchecked")
+			List<User> resultList = (List<User>) q.getResultList();
+			users = resultList;
+		} catch (NoResultException e) {
+			return null;
+		}
+		return users;
+		
+	}
+	
+	public List<String> getAllArticleUrl() {
+
+		EntityManager em = emf.createEntityManager();
+		Query q = em.createNamedQuery("ArticleUrl.toSubscribe", Article.class);
+		List<String> articles;
+		try {
+			@SuppressWarnings("unchecked")
+			List<String> resultList = (List<String>) q.getResultList();
+			articles = resultList;
+		} catch (NoResultException e) {
+			return null;
+		}
+		return articles;
+		
+	}
+	
+	public List<Subscribe> getAllSubscribeByArtikelUrl(String url
+			) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -67,22 +103,6 @@ public class SubscribeManager implements Serializable {
 			return null;
 		}
 		return subs;
-	}
-
-	public User getUserByUsername(String username) {
-
-		EntityManager em = emf.createEntityManager();
-		Query q = em.createNamedQuery("User.username", User.class);
-		q.setParameter("username", username);
-		User u;
-		try {
-
-			u = (User) q.getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
-		System.out.println("User '" + u.getUsername() + "' found by name.");
-		return u;
 	}
 
 	public void deleteSubscribe(long id) {
@@ -121,5 +141,35 @@ public class SubscribeManager implements Serializable {
 
 		em.getTransaction().commit();
 
+	}
+	
+	public void saveNotification(Notification notification) {
+		
+		UserManager um = new UserManager();
+		
+		ArrayList<User> users = (ArrayList<User>) getAllSubscribedUserByArticle(notification.getUrl());
+		for (User user : users) {
+			ArrayList<Notification> notifications = user.getNotifications();
+			notifications.add(notification);
+			user.setNotifications(notifications);
+			um.updateUser(user.getId(), user.getUsername(), user.getPwHash(), user.getEmail(), notifications);
+		}
+		
+	}
+
+	public Subscribe getSubscribeByUserIdAndUrl(long userId, String url) {
+		EntityManager em = emf.createEntityManager();
+		Query q = em.createNamedQuery("Subscribe.userIdAndUrl", Subscribe.class);
+		q.setParameter("userid", userId);
+		q.setParameter("url", url);
+		Subscribe sub;
+		try {
+
+			Subscribe resultList = (Subscribe) q.getSingleResult();
+			sub = resultList;
+		} catch (NoResultException e) {
+			return null;
+		}
+		return sub;
 	}
 }
