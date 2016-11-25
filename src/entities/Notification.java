@@ -16,7 +16,9 @@ public class Notification implements Serializable {
 
 	@Id
 	long id;
-	int diffCharSum;
+	// int diffCharSum;
+	int deletions;
+	int insertions;
 	// String originalText;
 	// String newText;
 	@Column(nullable=false) 
@@ -35,12 +37,28 @@ public class Notification implements Serializable {
 		this.id = id;
 	}
 
-	public int getDiffCharSum() {
+	/*public int getDiffCharSum() {
 		return diffCharSum;
 	}
 
 	public void setDiffCharSum(int diffCharSum) {
 		this.diffCharSum = diffCharSum;
+	}*/
+
+	public int getDeletions() {
+		return deletions;
+	}
+
+	public void setDeletions(int deletions) {
+		this.deletions = deletions;
+	}
+
+	public int getInsertions() {
+		return insertions;
+	}
+
+	public void setInsertions(int insertions) {
+		this.insertions = insertions;
 	}
 
 	public Date getDate() {

@@ -2,6 +2,8 @@ package api;
 
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -21,6 +23,7 @@ public class Revision {
 
 	public Revision() {
 	}
+
 	public Revision(String id, Revision parent, String minor, Date timestamp, String comment, List<String> tags,
 			Diff diff) {
 		super();
@@ -38,6 +41,7 @@ public class Revision {
 	public String getId() {
 		return id;
 	}
+
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -47,6 +51,7 @@ public class Revision {
 	public Revision getParent() {
 		return parent;
 	}
+
 	public void setParent(Revision parent) {
 		this.parent = parent;
 	}
@@ -55,9 +60,11 @@ public class Revision {
 	public String getMinor() {
 		return minor;
 	}
+
 	public void setMinor(String minor) {
 		this.minor = minor;
 	}
+
 	public boolean isMinor() {
 		return minor.equals("");
 	}
@@ -66,6 +73,7 @@ public class Revision {
 	public Date getTimestamp() {
 		return timestamp;
 	}
+
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
@@ -74,6 +82,7 @@ public class Revision {
 	public String getComment() {
 		return comment;
 	}
+
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
@@ -82,6 +91,7 @@ public class Revision {
 	public List<String> getTags() {
 		return tags;
 	}
+
 	public void setTags(List<String> tags) {
 		this.tags = tags;
 	}
@@ -90,7 +100,24 @@ public class Revision {
 	public Diff getDiff() {
 		return diff;
 	}
+
 	public void setDiff(Diff diff) {
 		this.diff = diff;
+	}
+
+	public int getInsertions() {
+		Pattern p = Pattern.compile(Pattern.quote("<tr>\n  <td class=\"diff-marker\">+</td>"));
+		Matcher m = p.matcher(diff.content);
+		int count;
+		for(count = 0; m.find(); count++);
+		return count;
+	}
+
+	public int getDeletions() {
+		Pattern p = Pattern.compile(Pattern.quote("<tr>\n  <td class=\"diff-marker\">\u2212</td>"));
+		Matcher m = p.matcher(diff.content);
+		int count;
+		for(count = 0; m.find(); count++);
+		return count;
 	}
 }

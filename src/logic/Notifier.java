@@ -61,7 +61,8 @@ public class Notifier {
 								message = "<table>\n";
 								message = "<tr><td>Comment:</td><td>"+n2.getComment()+"</td></tr>\n";
 								message = "<tr><td>Dátum:</td><td>"+n2.getDate()+"</td></tr>\n";
-								message = "<tr><td>Karakterszám:</td><td>"+n2.getDiffCharSum()+"</td></tr>\n";
+								message = "<tr><td>Törölt bekezdések:</td><td>"+n2.getDeletions()+"</td></tr>\n";
+								message = "<tr><td>Beszúrt bekezdések:</td><td>"+n2.getInsertions()+"</td></tr>\n";
 								message = "</table>\n";
 							}
 							
