@@ -27,18 +27,33 @@
 
 				<f:view>
 					<h:form>
-						<h:panelGrid columns="2" border="0">
-            Url: <h:inputText id="movietitle"
-								value="#{subscribeBean.url}" />
-            Gyakoriság: <h:inputText id="movietitle2"
+						<h:panelGrid columns="3" border="0">
+            Url: <h:inputText id="url" requiredMessage="*"
+								required="true" value="#{subscribeBean.url}" />
+							<h:message for="create:url" style="color: red" />
+            Gyakoriság*: <h:inputText id="frequency" requiredMessage="*"
+								required="true" converterMessage="Kötelezően egész szám!"
 								value="#{subscribeBean.frequency}" />
-            Érzékenység: <h:inputText id="movietitle3"
+							<h:message for="create:frequency" style="color: red" />
+            Érzékenység**: <h:inputText id="sensitivity"
+								requiredMessage="*" required="true"
+								converterMessage="Kötelezően egész szám!"
 								value="#{subscribeBean.sensitivity}" />
+							<h:message for="create:sensitivity" style="color: red" />
 						</h:panelGrid>
+						<br />
+			*A gyakoriság lehet negyedórás (15), órás (60), napi (1440), heti (10080), havi (44640) percekben megadva.
+						<br />
+			(A megadott értéket lefelé kerekítjük.)
+						<br />
+						<br />
+			**Az érzékenység azt a számot jelenti, ahány karakter megváltozása fölött egy változásról a felhasználó értesítést kér.
+						<br />
 						<br />
 						<h:commandButton id="submit" type="submit" value="Létrehoz"
 							action="#{subscribeBean.createSubscribe}" />
 					</h:form>
+					<br />
 					<h:form>
 						<h:commandLink id="list"
 							value="Vissza a feliratkozások listájához!" action="control" />

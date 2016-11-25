@@ -54,4 +54,17 @@ public class ArticleManager implements Serializable {
 
 		return a;
 	}
+	
+	public Article deleteArticle(long id) {
+
+		EntityManager em = emf.createEntityManager();
+		Article a = em.find(Article.class, id);
+
+		em.getTransaction().begin();
+		em.merge(a);
+		em.remove(a);
+		em.getTransaction().commit();
+
+		return a;
+	}
 }

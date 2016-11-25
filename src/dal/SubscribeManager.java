@@ -112,9 +112,25 @@ public class SubscribeManager implements Serializable {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		Subscribe sub = em.find(Subscribe.class, id);
+		
+		boolean lastSub = false;
+		Article article = sub.getArticle();
+		List<User> users = (List<User>) this.getAllSubscribedUserByArticle(article.getUrl());
+		if(users.size() == 1 && users.get(0).getId() == sub.getUser().getId()) {
+			lastSub = true;
+		}
+		
 		em.merge(sub);
 		em.remove(sub);
+		
 		em.getTransaction().commit();
+		
+		if(lastSub){
+
+			ArticleManager am = new ArticleManager();
+			am.deleteArticle(article.getId());
+		}
+		
 
 	}
 

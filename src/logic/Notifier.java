@@ -3,8 +3,6 @@ package logic;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-// File Name SendEmail.java
 import java.util.Properties;
 
 import javax.ejb.Schedule;
