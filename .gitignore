@@ -18,3 +18,4 @@ doc/*
 *.ltx
 
 persistence.xml
+/target/
