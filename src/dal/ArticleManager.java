@@ -1,4 +1,4 @@
-package dal;
+package dal; 
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class ArticleManager implements Serializable {
 		em.persist(a);
 		em.getTransaction().commit();
 
-		return a;
+		return a; 
 	}
 	
 	public Article deleteArticle(long id) {
