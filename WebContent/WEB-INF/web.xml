@@ -5,7 +5,7 @@
     
     <context-param>
         <param-name>javax.faces.CONFIG_FILES</param-name>
-        <param-value>/src/webapp/WEB-INF/classes/faces-config.xml</param-value>
+        <param-value>/WEB-INF/lib/faces-config.xml</param-value>
     </context-param>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>

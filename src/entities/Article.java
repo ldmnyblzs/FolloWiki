@@ -24,7 +24,7 @@ public class Article implements Serializable {
 	private long id;
 	@Column(unique=true, nullable=false) 
 	private String url;
-	private ArrayList<Notification> changes;
+	// private ArrayList<Notification> changes;
 
 	public long getId() {
 		return id;
@@ -42,12 +42,12 @@ public class Article implements Serializable {
 		this.url = url;
 	}
 
-	public ArrayList<Notification> getChanges() {
+	/*public ArrayList<Notification> getChanges() {
 		return changes;
 	}
 
 	public void setChanges(ArrayList<Notification> changes) {
 		this.changes = changes;
-	}
+	}*/
 
 }

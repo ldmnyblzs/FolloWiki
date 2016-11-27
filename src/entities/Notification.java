@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Notification implements Serializable {
@@ -21,6 +23,7 @@ public class Notification implements Serializable {
 	int insertions;
 	// String originalText;
 	// String newText;
+	@Temporal(TemporalType.DATE)
 	@Column(nullable=false) 
 	Date date;
 	String comment;

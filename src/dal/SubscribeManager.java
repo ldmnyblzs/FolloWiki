@@ -149,7 +149,7 @@ public class SubscribeManager implements Serializable {
 		
 		ArrayList<User> users = (ArrayList<User>) getAllSubscribedUserByArticle(notification.getUrl());
 		for (User user : users) {
-			ArrayList<Notification> notifications = user.getNotifications();
+			List<Notification> notifications = user.getNotifications();
 			notifications.add(notification);
 			user.setNotifications(notifications);
 			um.updateUser(user.getId(), user.getUsername(), user.getPwHash(), user.getEmail(), notifications);

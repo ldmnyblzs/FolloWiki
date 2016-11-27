@@ -46,7 +46,7 @@ public class ArticleManager implements Serializable {
 		Article a = new Article();
 
 		a.setUrl(url);
-		a.setChanges(new ArrayList<Notification>());
+		// a.setChanges(new ArrayList<Notification>());
 
 		em.getTransaction().begin();
 		em.persist(a);

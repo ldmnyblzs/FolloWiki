@@ -69,7 +69,7 @@ public class UserManager implements IAccountManager, Serializable {
 		System.out.println("User '" + username + "' removed.");
 	}
 
-	public void updateUser(long id, String username, String pwHash, String email, ArrayList<Notification> notifications){
+	public void updateUser(long id, String username, String pwHash, String email, List<Notification> notifications){
 
 		EntityManager em = emf.createEntityManager();
 

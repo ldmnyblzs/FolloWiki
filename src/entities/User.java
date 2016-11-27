@@ -2,22 +2,23 @@ package entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 import dal.SubscribeManager;
 
 @Entity
-@NamedQueries({
-	@NamedQuery(name = "User.username", query = "SELECT u FROM User u WHERE u.username = :username"),
-	@NamedQuery(name = "User.all", query = "SELECT u FROM User u")
-})
+@NamedQueries({ @NamedQuery(name = "User.username", query = "FROM User u WHERE u.username = :username"),
+		@NamedQuery(name = "User.all", query = "FROM User u") })
 public class User implements Serializable {
 
 	/**
@@ -37,10 +38,10 @@ public class User implements Serializable {
 	private String email;
 	@Column(nullable = false)
 	private String role;
-	private ArrayList<Notification> notifications;
+	private List<Notification> notifications;
 
 	@SuppressWarnings("unused")
-	private ArrayList<Subscribe> subscribes;
+	private List<Subscribe> subscribes;
 
 	public long getId() {
 		return id;
@@ -82,12 +83,12 @@ public class User implements Serializable {
 		this.role = role;
 	}
 
-	public ArrayList<Notification> getNotifications() {
+	public List<Notification> getNotifications() {
 		return notifications;
 	}
 
-	public void setNotifications(ArrayList<Notification> notifications) {
-		this.notifications = notifications;
+	public void setNotifications(List<Notification> notifications2) {
+		this.notifications = notifications2;
 	}
 
 	public ArrayList<Subscribe> getSubscribes() {
@@ -95,7 +96,7 @@ public class User implements Serializable {
 		SubscribeManager sm = new SubscribeManager();
 		ArrayList<Subscribe> subs = new ArrayList<Subscribe>(sm.getAllSubscribeByUserId(id));
 		return subs;
-		//return subscribes;
+		// return subscribes;
 	}
 
 	public void setSubscribes(ArrayList<Subscribe> subscribes) {

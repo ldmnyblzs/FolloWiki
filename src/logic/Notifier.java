@@ -25,7 +25,7 @@ import entities.User;
 @Singleton
 public class Notifier {
 
-	@Schedule(minute = "*/15")
+	@Schedule(minute = "*/20")
 	public void userNotify() {
 		
 		UserManager um = new UserManager();

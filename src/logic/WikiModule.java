@@ -24,29 +24,25 @@ public class WikiModule {
 	}
 
 	@Schedule(minute = "*/15")
-	public void checkArticles() {
+	public void checkArticles() throws URISyntaxException {
 		LocalDate date = LocalDate.now();
 		String thisCheck = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 
 		SubscribeManager sm = new SubscribeManager();
 		List<String> urls = sm.getAllArticleUrl();
+		WikiManager wm = new WikiManager();
 
 		for (String url : urls) {
-			WikiManager wm = new WikiManager();
-			try {
-				Page page = wm.getRevisions(url, lastCheck, thisCheck);
-				for (Revision revision : page.getRevisions()) {
-					Notification notification = new Notification();
-					notification.setUrl(url);
-					notification.setTitle(page.getTitle());
-					notification.setComment(revision.getComment());
-					notification.setDate(revision.getTimestamp());
-					notification.setDeletions(revision.getDeletions());
-					notification.setInsertions(revision.getInsertions());
-					sm.saveNotification(notification);
-				}
-			} catch (URISyntaxException e) {
-				// Silently ignore page if not available
+			Page page = wm.getRevisions(url, lastCheck, thisCheck);
+			for (Revision revision : page.getRevisions()) {
+				Notification notification = new Notification();
+				notification.setUrl(url);
+				notification.setTitle(page.getTitle());
+				notification.setComment(revision.getComment());
+				notification.setDate(revision.getTimestamp());
+				notification.setDeletions(revision.getDeletions());
+				notification.setInsertions(revision.getInsertions());
+				sm.saveNotification(notification);
 			}
 		}
 		lastCheck = thisCheck;

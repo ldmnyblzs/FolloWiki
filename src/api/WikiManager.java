@@ -23,7 +23,7 @@ public class WikiManager {
 		String[] title = theuri.getPath().split("/");
 		return UriBuilder
 				.fromUri(
-						"https://{arg1}/w/api.php?action=query&prop=revisions&rvprop=%1Fids%1Fflags%1Ftimestamp%1Fparsedcomment%1Ftags&rvdiffto=prev&rvlimit=max&format=xml&titles={arg2}&rvstart={arg3}&rvend={arg4}&rvlimit=max")
-				.build(theuri.getHost(), title[2], from, to);
+						"{arg6}://{arg1}:{arg2}/w/api.php?action=query&prop=revisions&rvprop=%1Fids%1Fflags%1Ftimestamp%1Fparsedcomment%1Ftags&rvdiffto=prev&rvlimit=max&format=xml&titles={arg3}&rvstart={arg4}&rvend={arg5}&rvlimit=max")
+				.build(theuri.getHost(), theuri.getPort(), title[2], from, to, theuri.getScheme());
 	}
 }
