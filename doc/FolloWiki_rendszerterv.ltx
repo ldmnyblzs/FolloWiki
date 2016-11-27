@@ -22,7 +22,7 @@
 
 \section{Feladatkiírás}
 
-Az alkalmazás lehetővé teszi, hogy a felhasználók követhessék egy-egy Wikipédia-szócikk változásait. A felhasználó regisztrációt követően kiválaszthat szócikkeket, amelynek napi változásait az alkalmazás detektálja REST-en keresztül, és a felhasználót e-mailben értesíti. A legapróbb változtatásokról -- például egy elgépelés kijavítása -- a szerver nem küld értesítőt.
+Az alkalmazás lehetővé teszi, hogy a felhasználók követhessék egy-egy Wikipédia-szócikk változásait. A felhasználó regisztrációt követően kiválaszthat szócikkeket, amelynek napi változásait az alkalmazás detektálja REST-en keresztül, és a felhasználót e-mailben értesíti. A  legapróbb változtatásokról -- például egy elgépelés kijavítása -- a szerver nem küld értesítőt.
 
 \section{Tipikus funkciók}
 
@@ -35,7 +35,7 @@ Az alkalmazás lehetővé teszi, hogy a felhasználók követhessék egy-egy Wik
   \item[Beállítások]
     \begin{description}
     \item[]
-    \item[Értesítési gyakoriság] Választhat meghatározott értesítési gyakoriságok közül (pl.: tíz percenként, óránként, naponta, hetente, havonta)
+    \item[Értesítési gyakoriság] Választhat meghatározott értesítési gyakoriságok közül (pl.: tizenöt percenként, óránként, naponta, hetente, havonta)
     \item[Szűrőfeltétel] A változás mértékére és helyésre is megkötéseket tehet. Kérhető, hogy párszavas vagy a szócikk egy adott szakaszán kívül eső változásokról ne értesítsen az alkalmazás.
     \end{description}
   \item[Detektálás] Az alkalmazás az összes figyelt szócikket ütemezetten átnézi, detektálja a változásokat, és a megadott beállítások alapján dönt az értesítés lementéséről az érintett felhasználó fiókjában.
@@ -45,21 +45,27 @@ Az alkalmazás lehetővé teszi, hogy a felhasználók követhessék egy-egy Wik
 
 \section{Programkörnyezet}
 
-A szoftver egy \emph{Java Platform, Enterprise Edition (Java EE)}-re épülõ webes alkalmazás. A külsõ komponensekkel a beépített absztrakciós rétegeken keresztül fog kommunikálni. Az adatbázis elérése \emph{Java Persistence API (JPA)}, a Wikipédia API-jának elérése REST kérésekkel \emph{Java API for RESTful Web Services (JAX-RS)} használatával fog történni. A program minden olyan rendszeren futni fog, amiket ezek támogatnak.
+A feladat megvalósítására egy vékonykliens alkalmazás a legmegfelelőbb könnyű használhatóság szempontjából. A felhasználó számára a legkönnyebb, ha webes felületen keresztül érheti el a szolgáltatást. Ennek megfelelően a szoftver egy többrétegű webes alkalmazás. Személyes ismereteink alapján a Java nyelvet választottuk a fejlesztéshez, és az architektúrának megfelelően igénybe vesszük a \emph{Java Platform, Enterprise Edition (Java EE)} biztosította lehetőségeket. A weboldalak XHTML formátumú Java Server Faces oldalak lesznek, amik mögött szerveroldalon JavaBean-ek fogják a logikát biztosítani. A webszerveren és az adatbázisszerveren is Glassfish fog futni. Az adatbázis kezelését \emph{Java Persistence API}-t (\emph{JPA}-t) használálunk. A külsõ komponensekkel a beépített absztrakciós rétegeken keresztül fog kommunikálni. A Wikipédia API-jának elérése REST kérésekkel \emph{Java API for RESTful Web Services (JAX-RS)} használatával fog történni. A program minden olyan rendszeren futni fog, amiket a felsorolt technológiák támogatnak.
 
 \chapter{Megvalósítás}
 
 \section{Architektúra}
 
-Az alkalmazásnak három klasszikusan elkülöníthető rétege van.
-% 3 réteg de 5 elem a listában?
-%\begin{description}
-%\item[Adatbázis] Az entitásokat tárolja.
-%\item[Adathozzáférési réteg] Minden entitáshoz tartozik egy osztály, ami a hozzáférést szabályozza, illetve adatmanipuláló funkciókat nyújt.
-%\item[Logikai réteg] Ütemezett feladatokat végzõ komponensek működnek ezen a rétegen.
-%\item[Felhasználói felület] Webes felület, amin keresztül elérhetőek az alkalmazás funkciói.
-%\item[Egyéb] Léteznek további segédosztályok, amik a rétegeknek működést segítő szeparált szolgáltatásokat nyújtanak.
-%\end{description}
+Az alkalmazásnak négy klasszikusan elkülöníthető rétege van.
+
+\begin{description}
+\item[Adatbázis]Az alkalmazás alapját az entitások képezik. A felhasználókat, a cikkeket... stb. entitások testesítik meg, amiket adatbázisban tárolunk. A réteg elkülönítésével lehetőségünk nyílik, hogy több alkalmazás is ugyanazokhoz az entitásokhoz férhessen hozzá.
+\item[Adathozzáférési réteg] A legtöbb entitáshoz tartozik egy osztály, ami a hozzáférést szabályozza, illetve adatmanipuláló funkciókat nyújt a felsőbb rétegeknek. Az adatbázis konzisztenciájának megtartásához kötelező az adathozzáférési réteg használata.
+\item[Logikai réteg] Két feladatkörrel foglalkozik logikai réteg, amik ugyan elszeparálhatóak, de nem épülnek egymásra. Az egyik csoportba az ütemezett feladatok ellátásáért felelős osztályok, a másikba klasszikus JavaBean-ek tartoznak.
+\begin{description}
+\item[Ütemezők]
+A releváns változásokat detektáló és értesítést kiküldő osztályok, amik beállított időközönként automatikusan lefutnak.
+\item[Beans]
+Klasszikus JavaBean-ek, amik a weboldalak számára megjelenítendő adatokat biztosítanak, továbbá minden weboldalon kezdeményezett műveletet a Bean-ek kezelnek.
+\item[Egyéb] Léteznek további segédosztályok, amik működést segítő szeparált szolgáltatásokat nyújtanak.
+\end{description}
+\item[Felhasználói felület] Java Server Faces Webes felület, amin keresztül elérhetőek az alkalmazás funkciói.
+\end{description}
 
 % ÁBRA
 
@@ -77,10 +83,20 @@ Az alkalmazásban újrafelhasználhatóség érdekében fontos szempont volt a k
 
 \subsection{Grafikus felület}
 
+A felhasználó számára egy egyszerű webes felület áll rendelkezésre, ahol be tud jelentkezni és el tudja végezni a fontosabb beállításokat. Ezek alapján két csoportba soroljuk a weboldalakat: Felhasználók és feliratkozások kezelői.
+
+\begin{description}
+\item[Felhasználó-kezelés]
+Funkcionalitások tekintetében a felület lehetőséget biztosít a felhasználónak, hogy beléphessen vagy regisztrálhasson, illetve ki tudja választani, hogy ezeket a műveleteket milyen típusú fiókkal szeretnék elvégezni.
+\item[Feliratkozás-kezelés]
+Bejelentkezés után a felhasználó a feliratkozásait kezelheti: hozhat létre újat, törölhet vagy módosíthat meglévőt, és listába szedve láthatja az összes feliratkozást.
+\end{description}
+A felület minimális formázást is tartalmaz a Wikipédiához hasonló színvilággal.
+
 \section{Entitások}
 \label{sec:entities}
 
-Az adatok konzisztenciájának megőrzése érdekében az osztályok állapotai lementésre kerülnek az adatbázisba. Annak érdekében, hogy az alkalmazás legnagyobb része statikusan tudjon működni, minden állapot entitás osztályokra korlátozódik. Ezen állapotok pusztán a felhasználók, cikkek és feliratkozások objektumait jelentik. Ezeket az alkalmazás rendszeresen szinkronizálja az adatbázissal, minden egyéb osztály állapotfüggetlen.
+Az adatok konzisztenciájának megőrzéséhez az osztályok állapotai lementésre kerülnek az adatbázisba. Annak érdekében, hogy az alkalmazás legnagyobb része statikusan tudjon működni, minden állapot entitás osztályokra korlátozódik. Ezen állapotok pusztán a felhasználók, cikkek és feliratkozások objektumait jelentik. Ezeket az alkalmazás rendszeresen szinkronizálja az adatbázissal, minden egyéb osztály állapotfüggetlen.
 
 % \subsection{ER diagram}
 
@@ -101,7 +117,8 @@ Ha külső fiókkal jelentkezik be, az alkalmazás azt is absztrakt módon képe
     username & \verb|String| & Felhasználó neve \\ 
     pwHash & \verb|String| & Felhasználó jelszava elkódolva \\
     email & \verb|String| & Felhasználó értesítési email címe \\
-    notifications & \verb|List<String>| & Lista azokról felhasználót érintõ releváns változásokról, amik még nem lettek email-ben kiküldve \\
+    role & \verb|String| & Felhasználói szerepkör (jelenleg nincs használatban) \\
+    notifications & \verb|List<Notification>| & Lista azokról felhasználót érintõ releváns változásokról, amik még nem lettek email-ben kiküldve \\
     \bottomrule
   \end{tabulary}
   \caption{A User egyedhalmaz attribútumai}
@@ -119,7 +136,7 @@ Szócikk entitás, ami tartalmazza a Wikipédia oldal URL címét. Rendelkezik e
     Név & Típus & Jelentés \\
     \midrule
     url & \verb|String| & Wikipéda-cikk elérési útja \\ 
-    differences & \verb|List<String>| & Wikipéda-cikk releváns változásai \\ 
+    differences & \verb|List<Notification>| & Wikipéda-cikk releváns változásai \\ 
     \bottomrule
   \end{tabulary}
   \caption{Az Article egyedhalmaz attribútumai}
@@ -128,7 +145,7 @@ Szócikk entitás, ami tartalmazza a Wikipédia oldal URL címét. Rendelkezik e
 
 \subsection{Subscribe}
 
-A felhasználók feliratkozhatnak cikkek követésére, és különbözõ beállításokat alkalmaznak. Szükség van ezért egy kapcsolatra, ami tárolja ezeket a beállításokat a felhasználó - szócikk pároshoz
+A felhasználók feliratkozhatnak cikkek követésére, és különbözõ beállításokat alkalmaznak. Szükség van ezért egy kapcsolatra, ami tárolja ezeket a beállításokat a felhasználó - szócikk pároshoz.
 
 \begin{table}[ht]
   \centering
@@ -138,8 +155,28 @@ A felhasználók feliratkozhatnak cikkek követésére, és különbözõ beáll
     \midrule
     user & \verb|User| & Referencia az õt létrehozó felhasználó entitásra \\ 
     article & \verb|Article| & Referencia a cikk entitásra, amire a beállítások vonatkoznak \\ 
-    frequency & \verb|TimeSpan| & Értesítési gyakoriság \\ 
-    sensitivity & \verb|int| & Érzékenységi skála a változásokra (minimum: új alfejezet, maximum: betûátírás) \\ 
+    frequency & \verb|int| & Értesítési gyakoriság (percekben)\\ 
+    sensitivity & \verb|int| & Érzékenységi skála a változásokra (jelenleg karakterszámot lehet megadni) \\ 
+    \bottomrule
+  \end{tabulary}
+  \caption{A Subscribe kapcsolattípus attribútumai}
+  \label{tab:subscribe_connection}
+\end{table}
+
+\subsection{Notification}
+
+A detektált változások Notification objektumként kerülnek tárolásra. Attribútumaiban tárolásra kerülnek a változással kapcsolatos fontosabb adatok. Ez mindig tárolásra kerül a megváltozott cikk (Article) entitás differences listájában, és az érintett felhasználók (User) notifications listájában is.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabulary}{\linewidth}{llL} 
+    \toprule
+    Név & Típus & Jelentés \\
+    \midrule
+    date & \verb|Date| & Változás dátuma \\ 
+    comment & \verb|String| & A cikket módosító személyes megjegyzése \\ 
+    url & \verb|String| & A cikk url-je\\ 
+    title & \verb|String| & A cikk címe \\ 
     \bottomrule
   \end{tabulary}
   \caption{A Subscribe kapcsolattípus attribútumai}
@@ -153,7 +190,7 @@ A felelősségek megfelelő elosztása érdekében minden olyan metódus, ami cs
 
 \subsection{UserManager}
 
-Lehetõséget biztosít a felhasználók kezelésére. Képes helyi felhasználói fiókot is létrehozni, de képes bejelentkeztetni akár már meglévő Wikipédia fiókkal is (és tetszőleges számban bővíthető tovább például Facebook felhasználói fiókra).
+Lehetõséget biztosít a felhasználók kezelésére. Képes helyi felhasználói fiókot is létrehozni, de képes bejelentkeztetni akár már meglévő Wikipédia fiókkal is (és tetszőleges számban bővíthető tovább például Facebook felhasználói fiókra). Implementálja az IAccountManager interfészt a helyi bejelentkezéshez.
 
 \begin{table}[ht]
   \centering
@@ -161,8 +198,12 @@ Lehetõséget biztosít a felhasználók kezelésére. Képes helyi felhasznál�
     \toprule
     Függvénynév & Típus & Jelentés \\
     \midrule
-    \verb|loginUser| & \verb|boolean| & Megadott adatokkal bejelentkezteti a felhasználót az átadott paraméternek megfelelõen \\ 
-    \verb|createUser| & \verb|boolean| & Új felhasználót hoz létre \\ 
+    \verb|createUser| & \verb|User| & Új felhasználót hoz létre \\ 
+    \verb|deleteUser| & \verb|void| & Törli a felhasználót \\ 
+    \verb|updateUser| & \verb|void| & Módosítja a felhasználót \\ 
+    \verb|getAllUser| & \verb|List<User>| & Visszaadja az összes felhasználót \\ 
+    \verb|getUserByUsername| & \verb|User| & Visszaadja a felhasználó objektumot egy adott névvel \\ 
+    \verb|getUserById| & \verb|User| & Visszaadja a felhasználó objektumot egy adott azonosító lapján \\ 
     \bottomrule
   \end{tabulary}
   \caption{A UserManager osztály metódusai}
@@ -171,7 +212,7 @@ Lehetõséget biztosít a felhasználók kezelésére. Képes helyi felhasznál�
 
 \subsection{SubscribeManager}
 
-Követések kezelését végző osztály, rendelkezik a Subscribe entitások kezeléséhez szükséges metódusokkal.
+A SubscribeManager alapvetően a feliratkozások (Subscribe) kezeléséért felelős. Ezek az objektumok azonban kapcsolatot teremtenek a felhasználókkal (User) és a cikkekkel (Article) is, ezért különböző lekérdezési lehetőségek vannak felhasználókra és cikkekre, amire önmagában a UserManager vagy az ArticleManager nem lenne képes. Ez az osztály felelős azért is, hogy a Notification objektumokat konziosztens állapotban tartsa, vagyis hogy az Article objektumoknál lementett változások (Notification) bekerüljenek az érintett felhasználó notifications lisájába is.
 
 \begin{table}[ht]
   \centering
@@ -179,9 +220,16 @@ Követések kezelését végző osztály, rendelkezik a Subscribe entitások kez
     \toprule
     Függvénynév & Típus & Jelentés \\
     \midrule
-    \verb|createSubscribe| & \verb|boolean| & Új feliratkozást hoz létre illetve magát a cikket, ha az adott URL még nem létezik az adatbázisban \\
-    \verb|getAllSubscribeByArticle| & \verb|List<Subscribe>| & Visszaadja adott cikkhez az összes feliratkozást \\
-    \verb|getAllSubscribeByUser| & \verb|List<Subscribe>| & Visszaadja adott felhasználóhoz az összes feliratkozását \\ 
+    \verb|createSubscribe| & \verb|Subscribe| & Új feliratkozást hoz létre \\
+    \verb|deleteSubscribe| & \verb|void| & Feliratkozást töröl \\
+    \verb|updateSubscribe| & \verb|void| & Feliratkozást módosít \\
+    \verb|getSubscribeById| & \verb|Subscribe| & Feliratkozás lekérdezése azonosító alapján \\
+    \verb|getAllSubscribeByArticle| & \verb|List<Subscribe>| & Feliratkozások lekérdezése adott cikkre vonatkozóan \\
+    \verb|getAllSubscribeByUserId| & \verb|List<Subscribe>| & Feliratkozások lekérdezése feliratkozott felhasználó azonosítója alapján \\ 
+    \verb|getAllSubscribeByUserIdAndUrl| & \verb|List<Subscribe>| & Feliratkozás lekérdezése adott cikkre és adott felhasználóra vonatkozóan \\ 
+    \verb|getAllArticleUrl| & \verb|List<String>| & Visszaadja az összes egyedi URL-t azokhoz a cikkekhez, amikre feliratkoztak \\
+    \verb|getAllSubscribedUserByArticle| & \verb|List<User>| & Visszaadja azokat a felhasználókat, akik adott cikkre feliratkoztak \\
+    \verb|saveNotification| & \verb|void| & Összetett mentést végez, ami során az észlelt különbséget elmenti az adott cikk számára, és az összes feliratkozott felhasználóhoz is külön-külön, aki számára az adott változás releváns \\
     \bottomrule
   \end{tabulary}
   \caption{A SubscribeManager osztály metódusai}
@@ -213,41 +261,47 @@ Felhasználók kezeléséért felelős osztály. Metódusai lehetőséget biztos
   \label{tab:UserManager_class}
 \end{table}
 
-\subsection{Differentiator}
+% Úgy látom ez nem lett használva
 
-Az alkalmazás motorja. Ez a differenciáló osztály kérdezi le a Wikipédiától a követett szócikkek módosulásait, és a beállítások alapján dönt róla, hogy relevánsok-e. Metódusai az ehhez szükséges algoritmusokat tartalmazzák. Referenciája van az ArticleManager objektumra, ahonnan lekérdezheti a követett cikkek listáját, illetve, ha egy cikknél válozást észlel, képes a manager-en keresztül elérni a cikk és a felhasználók bufferét is, ahova elmenti a releváns változások referenciáját. Ezt a műveletet ütemezetten végzi minimális értesítési gyakorisággal.
+%\subsection{Differentiator}
 
-\begin{table}[ht]
-  \centering
-  \begin{tabulary}{\linewidth}{llL} 
-    \toprule
-    Függvényév & Típus & Jelentés \\
-    \midrule
-    \verb|loginUser| & \verb|boolean| & Megadott adatokkal bejelentkezteti a felhasználót \\ 
-    \verb|createUser| & \verb|boolean| & Új felhasználót hoz létre \\
-    \bottomrule
-  \end{tabulary}
-  \caption{A Differentiator osztály metódusai}
-  \label{tab:Differeitiator_class}
-\end{table}
+%Az alkalmazás motorja. Ez a differenciáló osztály kérdezi le a Wikipédiától a követett szócikkek módosulásait, és a beállítások alapján dönt róla, hogy relevánsok-e. Metódusai az ehhez szükséges algoritmusokat tartalmazzák. Referenciája van az ArticleManager objektumra, ahonnan lekérdezheti a követett cikkek listáját, illetve, ha egy cikknél válozást észlel, képes a manager-en keresztül elérni a cikk és a felhasználók bufferét is, ahova elmenti a releváns változások referenciáját. Ezt a műveletet ütemezetten végzi minimális értesítési gyakorisággal.
 
-\subsection{CommunicationManager}
+%\begin{table}[ht]
+%  \centering
+%  \begin{tabulary}{\linewidth}{llL} 
+%    \toprule
+%    Függvényév & Típus & Jelentés \\
+%    \midrule
+%    \verb|loginUser| & \verb|boolean| & Megadott adatokkal bejelentkezteti a felhasználót \\ 
+%    \verb|createUser| & \verb|boolean| & Új felhasználót hoz létre \\
+%    \bottomrule
+%  \end{tabulary}
+%  \caption{A Differentiator osztály metódusai}
+%  \label{tab:Differeitiator_class}
+%\end{table}
 
-Több eset is előfordul, amikor a szervernek külsõ komponenssel kell kommunikálnia, például egy Wikipédia fiókkal történő bejelentkeztetés során, vagy egy adott cikk változásainak a lekérdezésekor. Az alkalmazás ezeket REST-es hívásokkal kezeli. A REST-es kommunikáció lebonyolításáért ez az osztály felelős minden esetben.
+% Meg ez se..
 
-\begin{table}[ht]
-  \centering
-  \begin{tabulary}{\linewidth}{llL} 
-    \toprule
-    Függvényév & Típus & Jelentés \\
-    \midrule
-    \verb|doGet| & \verb|String| & GET üzenet küldése \\ 
-    \verb|doPost| & \verb|String| & POST üzenet küldése \\ 
-    \bottomrule
-  \end{tabulary}
-  \caption{A CommunicationManager osztály metódusai}
-  \label{tab:CommunicationManager_class}
-\end{table}
+%\subsection{CommunicationManager}
+
+%Több eset is előfordul, amikor a szervernek külsõ komponenssel kell kommunikálnia, például egy Wikipédia fiókkal történő bejelentkeztetés során, vagy egy adott cikk változásainak a lekérdezésekor. Az alkalmazás ezeket REST-es hívásokkal kezeli. A REST-es kommunikáció lebonyolításáért ez az osztály felelős minden esetben.
+
+%\begin{table}[ht]
+%  \centering
+%  \begin{tabulary}{\linewidth}{llL} 
+%    \toprule
+%    Függvényév & Típus & Jelentés \\
+%    \midrule
+%    \verb|doGet| & \verb|String| & GET üzenet küldése \\ 
+%    \verb|doPost| & \verb|String| & POST üzenet küldése \\ 
+%    \bottomrule
+%  \end{tabulary}
+%  \caption{A CommunicationManager osztály metódusai}
+%  \label{tab:CommunicationManager_class}
+%\end{table}
+
+% Ezt meg majd megírod te
 
 \subsection{WikiModule}
 
@@ -268,6 +322,39 @@ A Wikipédia API az alkalmazásunk szempontjából hasznos metódusokat publiká
 \end{table}
 
 \section{GUI}
+
+% Ide be kellene szúrni pár screenshotot 
+Az alkalmazás funkciói hat weboldallal lettek megvalósítva.
+
+\subsection{Weboldalak}
+
+\begin{description}
+\item[Fiókválasztó (index.xhtml)]
+Beállítások szerint a felhasználót az alkalmazás rögön erre az oldalra irányítja. Gombnyomással választhat, hogy milyen típusú fiókkal szeretne belépni. Jelenleg ezek a gombok többsége nem aktív, de az alkalmazás fejlesztésével a helyi bejelentkezésen túl további lehetőségeket is biztosítan lehet.
+\item[Bejelentkező felület (login.xhtml)]
+A bejelentkezéskor felhasználónév jelszó párost kell megadni. Amennyiben a bejelentkezés nem sikerül, a felhasználó hibaüzenetet kap. Erről az oldalról átléphetünk a regisztrációra.
+\item[Regisztráció (createuser.xhtml)]
+A regisztrációhoz adatokat kell megadni. Az ezekhez tartozó beviteli mező ellenőrzött, így mezőt üresen hagyni nem enged, a hiányzó értékek mellé piros csillagok kerülnek.
+\item[Feliratkozások listája (control.xhtml)]
+Sikeres bejelentkezés után a felhasználó megtekintheti az eddigi feliratkozásait. Minden feliratkozás külön sor, és mindegyik mellett található törlési és módosítási lehetőség.
+\item[Új feliratkozás (sub.xhtml)]
+Külön felületen lehet egy feliratkozást létrehozni. A bementetk ellenőrzöttek, így üresen hagyni nem lehet, illetve ha nem az érték típusának megfelelő karaktereket adunk be (például számokat), akkor a feliratkozás létrehozása nem lesz végrehajtva.
+\item[Feliratkozás módosítása (edit.xhtml)] 
+A létrehozáshoz hasonló felületen egy kiválasztott feliratkozást módosítani is lehet. A bemeneten ugyanazok megengedettek, mint létrehozáskor. Kivétel ez alól az URL, ami nem módosítható (hiszen az már egy "másik" feliratkozás lenne).
+\end{description}
+
+\subsection{Biztonság}
+
+Az alkalmazás mérsékelt szinten a biztonságra is törekszik. A beviteli mezők típusra és ürességre mindig ellenőrzöttek. Az adatok csak konzisztens esetben kerülnek lementésre. Az entitások előre megfogalmazott NamedQuery lekérdezésekkel rendelkeznek, amik az esetleges értékeket paraméterként veszik át, így az SQL injection nem lehetésges.
+
+Egyes oldalak megtekintéséhez authentikáció szükséges. Java Server Faces használatával a faces-config.xml fájlban a navigáció csak a konfigurációnak megfelelően lehetséges. Ha a felhasználó ugyan a szabályoknak megfelelően, de bejelentkezés nélkül akar egy védett oldalt megtekinteni, akkor azt a kérést a szerver elutasítja.
+
+Ismert, hogy az oldalak nincsenek biztosítva cross-side-scripting ellen. Ez azonban csak minimális veszélyeket rejt, mivel minden felhasználó csak a maga által megadott adatokat láthatja. Ismert továbbá az is, hogy a beviteli mezők többsége kliensoldali, így annak a megkerülésével lehetőség nyílhat hibás meviteli értékek megadására.
+
+
+
+
+
 
 \chapter{Telepítési útmutató}
 
