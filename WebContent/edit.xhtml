@@ -25,17 +25,27 @@
 
 				<br />
 				<f:view>
+					<h:messages id="messages" style="color: red" showDetail="true" />
 					<h:form>
 						<h:panelGrid columns="2" border="0">
             Cím: <h:outputText id="url" value="#{subscribeBean.url}" />
-            Gyakoriság: <h:inputText id="frequecy"
+							<h:message for="url" style="color: red" />
+            Gyakoriság: <h:inputText requiredMessage="*" required="true" id="frequecy" converterMessage="Kötelezően egész szám!"
 								value="#{subscribeBean.frequency}" />
-            Érzékenység: <h:inputText id="sensitivity"
+							<h:message for="frequecy" style="color: red" />
+            Érzékenység: <h:inputText requiredMessage="*" required="true" id="sensitivity" converterMessage="Kötelezően egész szám!"
 								value="#{subscribeBean.sensitivity}" />
+							<h:message for="sensitivity" style="color: red" />
 						</h:panelGrid>
 						<br />
+			*A gyakoriság lehet negyedórás (15), órás (60), napi (1440), heti (10080), havi (44640) percekben megadva.
 						<br />
-
+			(A megadott értéket lefelé kerekítjük.)
+						<br />
+						<br />
+			**Az érzékenység azt a számot jelenti, ahány karakter megváltozása fölött egy változásról a felhasználó értesítést kér.
+						<br />
+						<br />
 						<h:inputHidden id="id" value="#{subscribeBean.id}" />
 						<h:commandButton id="submit" type="submit" value="Módosít"
 							action="#{subscribeBean.updateSubscribe}" />

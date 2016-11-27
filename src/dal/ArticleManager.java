@@ -1,4 +1,4 @@
-package dal;
+package dal; 
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,6 +50,19 @@ public class ArticleManager implements Serializable {
 
 		em.getTransaction().begin();
 		em.persist(a);
+		em.getTransaction().commit();
+
+		return a; 
+	}
+	
+	public Article deleteArticle(long id) {
+
+		EntityManager em = emf.createEntityManager();
+		Article a = em.find(Article.class, id);
+
+		em.getTransaction().begin();
+		em.merge(a);
+		em.remove(a);
 		em.getTransaction().commit();
 
 		return a;
