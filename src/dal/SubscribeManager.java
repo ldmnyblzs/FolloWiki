@@ -1,7 +1,6 @@
-package dal; 
+package dal;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -20,17 +19,13 @@ import entities.User;
 @Stateless
 public class SubscribeManager implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4296443767603977769L;
 
 	@PersistenceUnit
 	static EntityManagerFactory emf = Persistence.createEntityManagerFactory("FolloWikiDB");
+	static EntityManager em = emf.createEntityManager();
 
 	public Subscribe createSubscribe(User user, String url, int frequency, int sensitivity) {
-
-		EntityManager em = emf.createEntityManager();
 		ArticleManager am = new ArticleManager();
 		Article article = am.getArticleByUrl(url);
 		if (article == null)
@@ -46,107 +41,32 @@ public class SubscribeManager implements Serializable {
 		em.persist(sub);
 		em.getTransaction().commit();
 
-		System.out.println("Subscribe '" + url + "' created.");
-
 		return sub;
-	}
-	
-	public List<User> getAllSubscribedUserByArticle(String url) {
-
-		EntityManager em = emf.createEntityManager();
-		Query q = em.createNamedQuery("User.articleUrl", User.class);
-		q.setParameter("url", url);
-		List<User> users;
-		try {
-			@SuppressWarnings("unchecked")
-			List<User> resultList = (List<User>) q.getResultList();
-			users = resultList;
-		} catch (NoResultException e) {
-			return null;
-		}
-		return users;
-		
-	}
-	
-	public List<String> getAllArticleUrl() {
-
-		EntityManager em = emf.createEntityManager();
-		Query q = em.createNamedQuery("ArticleUrl.toSubscribe", Article.class);
-		List<String> articles;
-		try {
-			@SuppressWarnings("unchecked")
-			List<String> resultList = (List<String>) q.getResultList();
-			articles = resultList;
-		} catch (NoResultException e) {
-			return null;
-		}
-		return articles;
-		
-	}
-	
-	public List<Subscribe> getAllSubscribeByArtikelUrl(String url
-			) {
-		throw new UnsupportedOperationException();
-	}
-
-	public List<Subscribe> getAllSubscribeByUserId(long id) {
-		EntityManager em = emf.createEntityManager();
-		Query q = em.createNamedQuery("Subscribe.userId", Subscribe.class);
-		q.setParameter("userid", id);
-		List<Subscribe> subs;
-		try {
-
-			@SuppressWarnings("unchecked")
-			List<Subscribe> resultList = (List<Subscribe>) q.getResultList();
-			subs = resultList;
-		} catch (NoResultException e) {
-			return null;
-		}
-		return subs;
 	}
 
 	public void deleteSubscribe(long id) {
-
-		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		Subscribe sub = em.find(Subscribe.class, id);
-		
+
 		boolean lastSub = false;
 		Article article = sub.getArticle();
-		List<User> users = (List<User>) this.getAllSubscribedUserByArticle(article.getUrl());
-		if(users.size() == 1 && users.get(0).getId() == sub.getUser().getId()) {
+		List<User> users = getAllSubscribedUserByArticle(article);
+		if (users.size() == 1 && users.get(0).getId() == sub.getUser().getId()) {
 			lastSub = true;
 		}
-		
+
 		em.merge(sub);
 		em.remove(sub);
-		
-		em.getTransaction().commit();
-		
-		if(lastSub){
 
+		em.getTransaction().commit();
+
+		if (lastSub) {
 			ArticleManager am = new ArticleManager();
 			am.deleteArticle(article.getId());
 		}
-		
-
-	}
-
-	public Subscribe getSubscribeById(long id) {
-
-		EntityManager em = emf.createEntityManager();
-		Subscribe sub;
-		em.getTransaction().begin();
-		sub = em.find(Subscribe.class, id);
-		em.getTransaction().commit();
-
-		return sub;
 	}
 
 	public void updateSubscribe(long id, String url, int frequency, int sensitivity) {
-
-		EntityManager em = emf.createEntityManager();
-
 		em.getTransaction().begin();
 
 		Subscribe sub = em.find(Subscribe.class, id);
@@ -156,36 +76,48 @@ public class SubscribeManager implements Serializable {
 		em.persist(sub);
 
 		em.getTransaction().commit();
-
 	}
-	
+
+	public Subscribe getSubscribeById(long id) {
+		Subscribe sub;
+		em.getTransaction().begin();
+		sub = em.find(Subscribe.class, id);
+		em.getTransaction().commit();
+		return sub;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<User> getAllSubscribedUserByArticle(Article article) {
+		Query q = em.createNamedQuery("User.article", User.class);
+		q.setParameter("article", article);
+		try {
+			return q.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public Subscribe getSubscribeByUserAndArticle(User user, Article article) {
+		Query q = em.createNamedQuery("Subscribe.userAndArticle", Subscribe.class);
+		q.setParameter("user", user);
+		q.setParameter("article", article);
+		try {
+			return (Subscribe) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
 	public void saveNotification(Notification notification) {
-		
+
 		UserManager um = new UserManager();
-		
-		ArrayList<User> users = (ArrayList<User>) getAllSubscribedUserByArticle(notification.getUrl());
+
+		List<User> users = getAllSubscribedUserByArticle(notification.getArticle());
 		for (User user : users) {
 			List<Notification> notifications = user.getNotifications();
 			notifications.add(notification);
 			user.setNotifications(notifications);
 			um.updateUser(user.getId(), user.getUsername(), user.getPwHash(), user.getEmail(), notifications);
 		}
-		
-	}
-
-	public Subscribe getSubscribeByUserIdAndUrl(long userId, String url) {
-		EntityManager em = emf.createEntityManager();
-		Query q = em.createNamedQuery("Subscribe.userIdAndUrl", Subscribe.class);
-		q.setParameter("userid", userId);
-		q.setParameter("url", url);
-		Subscribe sub;
-		try {
-
-			Subscribe resultList = (Subscribe) q.getSingleResult();
-			sub = resultList;
-		} catch (NoResultException e) {
-			return null;
-		}
-		return sub;
 	}
 }

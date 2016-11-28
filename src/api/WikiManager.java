@@ -2,6 +2,7 @@ package api;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -23,7 +24,7 @@ public class WikiManager {
 		String[] title = theuri.getPath().split("/");
 		return UriBuilder
 				.fromUri(
-						"{arg6}://{arg1}:{arg2}/w/api.php?action=query&prop=revisions&rvprop=%1Fids%1Fflags%1Ftimestamp%1Fparsedcomment%1Ftags&rvdiffto=prev&rvlimit=max&format=xml&titles={arg3}&rvstart={arg4}&rvend={arg5}&rvlimit=max")
-				.build(theuri.getHost(), theuri.getPort(), title[2], from, to, theuri.getScheme());
+						"{arg1}://{arg2}:{arg3}/w/api.php?action=query&prop=revisions&rvprop=ids%7Cflags%7Ctimestamp%7Cparsedcomment%7Ctags&rvdiffto=prev&rvlimit=max&format=xml&titles={arg4}&rvstart={arg5}&rvend={arg6}&rvlimit=max")
+				.build(theuri.getScheme(), theuri.getHost(), theuri.getPort(), title[2], from, to);
 	}
 }

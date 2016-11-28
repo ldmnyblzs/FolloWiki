@@ -1,4 +1,4 @@
-package beans; 
+package beans;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -14,11 +14,6 @@ import logic.Constant;
 
 public class AuthenticationPhaseListener implements PhaseListener {
 
-	// --- IMPLEMENTALT METODUSOK --- //
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5042157473793171395L;
 
 	public void afterPhase(PhaseEvent event) {
@@ -32,15 +27,10 @@ public class AuthenticationPhaseListener implements PhaseListener {
 				|| path.equals(Constant.SIGN_UP_SIDE_PATH) || path.equals(Constant.NO_PERMISSION_SIDE_PATH)) {
 			return;
 		}
-		// Ha bejelentkezett:
-		// - User: par oldal megengedve
-		// - Admin: minden oldal megengedve
 		if (context.getSessionMap().containsKey(Constant.SESSION_KEY)) {
 
-			if (user.getRole().equals(Constant.USER_ROLE) && (path.equals(Constant.CONTROL_SIDE_PATH)
-					|| (path.equals(Constant.SUB_SIDE_PATH)) || (path.equals(Constant.EDIT_SIDE_PATH)))) {
-				return;
-			} else if (user.getRole().equals(Constant.ADMIN_ROLE)) {
+			if (path.equals(Constant.CONTROL_SIDE_PATH) || (path.equals(Constant.SUB_SIDE_PATH))
+					|| (path.equals(Constant.EDIT_SIDE_PATH))) {
 				return;
 			} else {
 				try {

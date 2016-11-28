@@ -1,4 +1,4 @@
-package entities; 
+package entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,13 +18,11 @@ import javax.persistence.OneToMany;
 import dal.SubscribeManager;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "User.username", query = "FROM User u WHERE u.username = :username"),
-		@NamedQuery(name = "User.all", query = "FROM User u") })
+@NamedQueries({ @NamedQuery(name = "User.username", query = "SELECT u FROM User u WHERE u.username = :username"),
+		@NamedQuery(name = "User.article", query = "SELECT u FROM User u, Subscribe s WHERE s.user = u AND s.article = :article"),
+		@NamedQuery(name = "User.all", query = "SELECT u FROM User u") })
 public class User implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1625901988929685861L;
 
 	@Id
@@ -36,11 +35,9 @@ public class User implements Serializable {
 	private String pwHash;
 	@Column(unique = true, nullable = false)
 	private String email;
-	@Column(nullable = false)
-	private String role;
+	@OneToMany(mappedBy = "user")
 	private List<Notification> notifications;
-
-	@SuppressWarnings("unused")
+	@OneToMany(mappedBy = "user")
 	private List<Subscribe> subscribes;
 
 	public long getId() {
@@ -75,32 +72,19 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
 	public List<Notification> getNotifications() {
 		return notifications;
 	}
 
-	public void setNotifications(List<Notification> notifications2) {
-		this.notifications = notifications2;
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
 	}
 
-	public ArrayList<Subscribe> getSubscribes() {
-
-		SubscribeManager sm = new SubscribeManager();
-		ArrayList<Subscribe> subs = new ArrayList<Subscribe>(sm.getAllSubscribeByUserId(id));
-		return subs;
-		// return subscribes;
+	public List<Subscribe> getSubscribes() {
+		return subscribes;
 	}
 
-	public void setSubscribes(ArrayList<Subscribe> subscribes) {
+	public void setSubscribes(List<Subscribe> subscribes) {
 		this.subscribes = subscribes;
 	}
-
 }

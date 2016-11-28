@@ -1,4 +1,4 @@
-package dal; 
+package dal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 
 import entities.Notification;
+import entities.Subscribe;
 import entities.User;
 import logic.Constant;
 import logic.IAccountManager;
@@ -33,46 +34,34 @@ public class UserManager implements IAccountManager, Serializable {
 
 	@PersistenceUnit
 	static EntityManagerFactory emf = Persistence.createEntityManagerFactory("FolloWikiDB");
+	static EntityManager em = emf.createEntityManager();
 
-	public User createUser(String username, String pwHash, String email, String role) {
-
-		EntityManager em = emf.createEntityManager();
+	public User createUser(String username, String pwHash, String email) {
 		User u = new User();
 
 		u.setUsername(username);
 		u.setPwHash(pwHash);
 		u.setEmail(email);
-		// u.setRole(role);
-		u.setRole(Constant.USER_ROLE);
 		u.setNotifications(new ArrayList<Notification>());
+		u.setSubscribes(new ArrayList<Subscribe>());
 
 		em.getTransaction().begin();
 		em.persist(u);
 		em.getTransaction().commit();
 
-		System.out.println("User '" + username + "' created.");
-
 		return u;
 	}
 
 	public void deleteUser(long id) {
-
-		EntityManager em = emf.createEntityManager();
-
 		User u = em.find(User.class, id);
 		String username = u.getUsername();
 
 		em.getTransaction().begin();
 		em.remove(u);
 		em.getTransaction().commit();
-
-		System.out.println("User '" + username + "' removed.");
 	}
 
-	public void updateUser(long id, String username, String pwHash, String email, List<Notification> notifications){
-
-		EntityManager em = emf.createEntityManager();
-
+	public void updateUser(long id, String username, String pwHash, String email, List<Notification> notifications) {
 		em.getTransaction().begin();
 
 		User user = em.find(User.class, id);
@@ -84,18 +73,18 @@ public class UserManager implements IAccountManager, Serializable {
 		em.persist(user);
 
 		em.getTransaction().commit();
-
 	}
-	
-	public User getUserByUsername(String username) {
 
-		EntityManager em = emf.createEntityManager();
+	public void refreshUser(User user) {
+		em.getTransaction().begin();
+		em.refresh(user);
+		em.getTransaction().commit();
+	}
+
+	public User getUserByUsername(String username) {
 		Query q = em.createNamedQuery("User.username", User.class);
 		q.setParameter("username", username);
-		User u;
 		try {
-
-			//u = q.getSingleResult();
 			CriteriaBuilder cb = em.getCriteriaBuilder();
 			CriteriaQuery<User> q2 = cb.createQuery(User.class);
 			Root<User> ru = q2.from(User.class);
@@ -103,18 +92,14 @@ public class UserManager implements IAccountManager, Serializable {
 			q2.select(ru).where(cb.equal(ru.get("username"), p));
 			TypedQuery<User> q3 = em.createQuery(q2);
 			q3.setParameter(p, username);
-			u = q3.getSingleResult();
+			return q3.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
 		}
-		return u;
 	}
 
 	public User getUserById(long id) {
-
-		EntityManager em = emf.createEntityManager();
 		User u = em.find(User.class, id);
-		System.out.println("User '" + u.getUsername() + "' found by id.");
 		return u;
 	}
 
@@ -129,7 +114,7 @@ public class UserManager implements IAccountManager, Serializable {
 			}
 			String pwHash = password;
 			try {
-				user = createUser(username, pwHash, email, Constant.USER_ROLE);
+				user = createUser(username, pwHash, email);
 				return user;
 			} catch (Exception e) {
 				throw new AppException("A felhasználó létrehozása sikertelen!",
@@ -160,17 +145,8 @@ public class UserManager implements IAccountManager, Serializable {
 		User user = getUserByUsername(username);
 		if (user != null) {
 			if (!user.getPwHash().equals(password)) {
-				/*
-				 * FacesMessage message = new
-				 * FacesMessage(FacesMessage.SEVERITY_ERROR,
-				 * "Sikertelen bejelentkezés!", "HibĂˇs jelszĂł.");
-				 */
 				throw new AppException("Hibás jelszó");
 			}
-
-			// context.getExternalContext().getSessionMap().put(SESSION_KEY,
-			// user);
-			// return sm.toList();
 			return user;
 		} else {
 			throw new AppException("Sikertelen bejelentkezés", "A(z) '" + username + "' felhasználónév nem létezik.");
@@ -186,17 +162,13 @@ public class UserManager implements IAccountManager, Serializable {
 
 	@SuppressWarnings("unchecked")
 	public List<User> getAllUser() {
-		
-		EntityManager em = emf.createEntityManager();
 		Query q = em.createNamedQuery("User.all", User.class);
 		List<User> users;
 		try {
-
-			users = q.getResultList();
+			return q.getResultList();
 		} catch (NoResultException e) {
 			return null;
 		}
-		return users;
 	}
 
 }

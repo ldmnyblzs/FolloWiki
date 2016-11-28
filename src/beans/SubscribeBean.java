@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import dal.SubscribeManager;
+import dal.UserManager;
 import entities.Subscribe;
 import logic.Constant;
 
@@ -32,6 +33,7 @@ public class SubscribeBean implements Serializable {
 	private int sensitivity;
 
 	private SubscribeManager sm = new SubscribeManager();
+	private UserManager um = new UserManager();
 
 	// --- GETTER SETTER --- //
 
@@ -79,6 +81,7 @@ public class SubscribeBean implements Serializable {
 
 	public String createSubscribe() {
 		sm.createSubscribe(ub.getUser(), url, frequency, sensitivity);
+		um.refreshUser(ub.getUser());
 		return Constant.CONTROL_KEY;
 	}
 
@@ -87,6 +90,7 @@ public class SubscribeBean implements Serializable {
 				.getRequest();
 		long currentSubscribeId = Long.parseLong(request.getParameter("selectedSubscribeId"));
 		sm.deleteSubscribe(currentSubscribeId);
+		um.refreshUser(ub.getUser());
 		return Constant.CONTROL_KEY;
 	}
 
@@ -101,6 +105,7 @@ public class SubscribeBean implements Serializable {
 		url = sub.getArticle().getUrl();
 		frequency = sub.getFrequency();
 		sensitivity = sub.getSensitivity();
+		um.refreshUser(ub.getUser());
 
 		return Constant.EDIT_KEY;
 	}
@@ -108,6 +113,7 @@ public class SubscribeBean implements Serializable {
 	public String updateSubscribe() {
 
 		sm.updateSubscribe(id, url, frequency, sensitivity);
+		um.refreshUser(ub.getUser());
 
 		return Constant.CONTROL_KEY;
 	}

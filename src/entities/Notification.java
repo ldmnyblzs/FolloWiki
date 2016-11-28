@@ -1,36 +1,43 @@
-package entities; 
+package entities;
 
 import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
 public class Notification implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -2112602753470142089L;
 
 	@Id
-	long id;
-	// int diffCharSum;
-	int deletions;
-	int insertions;
-	// String originalText;
-	// String newText;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
+	@Column
+	private int deletions;
+	@Column
+	private int insertions;
 	@Temporal(TemporalType.DATE)
-	@Column(nullable=false) 
-	Date date;
-	String comment;
-	@Column(nullable=false) 
-	String url;
-	@Column(nullable=false) 
-	String title;
+	@Column(nullable = false)
+	private Date date;
+	@Column
+	private String comment;
+	@ManyToOne
+	@JoinColumn(name = "ARTICLE_ID")
+	private Article article;
+	@Column(nullable = false)
+	private String title;
+	@ManyToOne
+	@JoinColumn(name = "USER_ID")
+	private User user;
 
 	public long getId() {
 		return id;
@@ -39,14 +46,6 @@ public class Notification implements Serializable {
 	public void setId(long id) {
 		this.id = id;
 	}
-
-	/*public int getDiffCharSum() {
-		return diffCharSum;
-	}
-
-	public void setDiffCharSum(int diffCharSum) {
-		this.diffCharSum = diffCharSum;
-	}*/
 
 	public int getDeletions() {
 		return deletions;
@@ -80,12 +79,12 @@ public class Notification implements Serializable {
 		this.comment = comment;
 	}
 
-	public String getUrl() {
-		return url;
+	public Article getArticle() {
+		return article;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setArticle(Article article) {
+		this.article = article;
 	}
 
 	public String getTitle() {
@@ -96,4 +95,11 @@ public class Notification implements Serializable {
 		this.title = title;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 }

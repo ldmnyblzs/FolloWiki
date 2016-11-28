@@ -1,30 +1,34 @@
-package entities; 
+package entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 @Entity
-@NamedQuery(name = "Article.url", query = "SELECT a FROM Article a WHERE a.url = :url")
+@NamedQueries({ @NamedQuery(name = "Article.all", query = "SELECT a FROM Article a"),
+		@NamedQuery(name = "Article.url", query = "SELECT a FROM Article a WHERE a.url = :url") })
 public class Article implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8467591699250373007L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	@Column(unique=true, nullable=false) 
+	@Column(unique = true, nullable = false)
 	private String url;
-	// private ArrayList<Notification> changes;
+	@OneToMany(mappedBy = "article")
+	private List<Subscribe> subscribes;
+	@OneToMany(mappedBy = "article")
+	private List<Notification> notifications;
 
 	public long getId() {
 		return id;
@@ -42,12 +46,19 @@ public class Article implements Serializable {
 		this.url = url;
 	}
 
-	/*public ArrayList<Notification> getChanges() {
-		return changes;
+	public List<Subscribe> getSubscribes() {
+		return subscribes;
 	}
 
-	public void setChanges(ArrayList<Notification> changes) {
-		this.changes = changes;
-	}*/
+	public void setSubscribes(List<Subscribe> subscribes) {
+		this.subscribes = subscribes;
+	}
 
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
 }

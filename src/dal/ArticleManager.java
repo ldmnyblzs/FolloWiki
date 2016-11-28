@@ -1,7 +1,8 @@
-package dal; 
+package dal;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -24,40 +25,21 @@ public class ArticleManager implements Serializable {
 
 	@PersistenceUnit
 	static EntityManagerFactory emf = Persistence.createEntityManagerFactory("FolloWikiDB");
-
-	public Article getArticleByUrl(String url) {
-
-		EntityManager em = emf.createEntityManager();
-		Query q = em.createNamedQuery("Article.url", Article.class);
-		q.setParameter("url", url);
-		Article a;
-		try {
-
-			a = (Article) q.getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
-		return a;
-	}
+	static EntityManager em = emf.createEntityManager();
 
 	public Article createArticle(String url) {
-
-		EntityManager em = emf.createEntityManager();
 		Article a = new Article();
 
 		a.setUrl(url);
-		// a.setChanges(new ArrayList<Notification>());
 
 		em.getTransaction().begin();
 		em.persist(a);
 		em.getTransaction().commit();
 
-		return a; 
+		return a;
 	}
-	
-	public Article deleteArticle(long id) {
 
-		EntityManager em = emf.createEntityManager();
+	public Article deleteArticle(long id) {
 		Article a = em.find(Article.class, id);
 
 		em.getTransaction().begin();
@@ -66,5 +48,25 @@ public class ArticleManager implements Serializable {
 		em.getTransaction().commit();
 
 		return a;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Article> getAllArticles() {
+		Query q = em.createNamedQuery("Article.all", Article.class);
+		try {
+			return q.getResultList();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
+	public Article getArticleByUrl(String url) {
+		Query q = em.createNamedQuery("Article.url", Article.class);
+		q.setParameter("url", url);
+		try {
+			return (Article) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 }

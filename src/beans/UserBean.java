@@ -20,9 +20,6 @@ import logic.AppException;
 @ManagedBean(name = "userBean")
 public class UserBean implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -600377825227986561L;
 
 	@Resource

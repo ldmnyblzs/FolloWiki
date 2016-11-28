@@ -1,48 +1,61 @@
 package logic;
 
 import java.net.URISyntaxException;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.annotation.PostConstruct;
 
 import api.Page;
 import api.Revision;
 import api.WikiManager;
+import dal.ArticleManager;
 import dal.SubscribeManager;
+import entities.Article;
 import entities.Notification;
 
+@Startup
 @Singleton
 public class WikiModule {
 	String lastCheck;
 
-	public WikiModule() {
-		LocalDate date = LocalDate.now();
-		lastCheck = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+	@PostConstruct
+	public void init() {
+		ZonedDateTime date = ZonedDateTime.now();
+		lastCheck = date.format(DateTimeFormatter.ISO_INSTANT);
 	}
 
-	@Schedule(minute = "*/15")
-	public void checkArticles() throws URISyntaxException {
-		LocalDate date = LocalDate.now();
-		String thisCheck = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+	@Schedule(hour = "*", minute = "0/5", second = "0", persistent = false)
+	public void checkArticles() {
+		ZonedDateTime date = ZonedDateTime.now();
+		String thisCheck = date.format(DateTimeFormatter.ISO_INSTANT);
 
-		SubscribeManager sm = new SubscribeManager();
-		List<String> urls = sm.getAllArticleUrl();
 		WikiManager wm = new WikiManager();
+		ArticleManager am = new ArticleManager();
+		SubscribeManager sm = new SubscribeManager();
+		Page page;
 
-		for (String url : urls) {
-			Page page = wm.getRevisions(url, lastCheck, thisCheck);
-			for (Revision revision : page.getRevisions()) {
-				Notification notification = new Notification();
-				notification.setUrl(url);
-				notification.setTitle(page.getTitle());
-				notification.setComment(revision.getComment());
-				notification.setDate(revision.getTimestamp());
-				notification.setDeletions(revision.getDeletions());
-				notification.setInsertions(revision.getInsertions());
-				sm.saveNotification(notification);
+		for (Article a : am.getAllArticles()) {
+			try {
+				page = wm.getRevisions(a.getUrl(), thisCheck, lastCheck);
+			} catch (URISyntaxException use) {
+				continue;
+			}
+			if (page.getRevisions() != null) {
+				for (Revision revision : page.getRevisions()) {
+					Notification notification = new Notification();
+					notification.setArticle(a);
+					notification.setTitle(page.getTitle());
+					notification.setComment(revision.getComment());
+					notification.setDate(revision.getTimestamp());
+					notification.setDeletions(revision.getDeletions());
+					notification.setInsertions(revision.getInsertions());
+					sm.saveNotification(notification);
+				}
 			}
 		}
 		lastCheck = thisCheck;
