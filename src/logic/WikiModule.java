@@ -29,7 +29,7 @@ public class WikiModule {
 		lastCheck = date.format(DateTimeFormatter.ISO_INSTANT);
 	}
 
-	@Schedule(hour = "*", minute = "0/5", second = "0", persistent = false)
+	@Schedule(hour = "*", minute = "0/15", second = "0", persistent = false)
 	public void checkArticles() {
 		ZonedDateTime date = ZonedDateTime.now();
 		String thisCheck = date.format(DateTimeFormatter.ISO_INSTANT);
