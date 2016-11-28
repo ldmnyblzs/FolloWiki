@@ -1,4 +1,4 @@
-\documentclass[a4paper]{report}
+\documentclass[a4paper, 12pt]{report}
 
 \usepackage[magyar]{babel}
 \usepackage[utf8x]{inputenc}
@@ -6,6 +6,20 @@
 \usepackage{fullpage}
 \usepackage{tabulary}
 \usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily,
+  columns=fullflexible,
+  showspaces=false,
+  showstringspaces=false,
+  commentstyle=\color{red},
+  keywordstyle=\color{blue},
+  breaklines=true
+}
+\usepackage{graphicx}
+\usepackage{float}
+
+\graphicspath{{images/}}
 
 \title{%
   FolloWiki \\
@@ -108,7 +122,7 @@ Amennyiben a felhasználó a mi alkalmazásunkban akar fiókot létrehozni, van 
 
 Ha külső fiókkal jelentkezik be, az alkalmazás azt is absztrakt módon képes kezelni. Ebben az esetben az entitás adatai nem az adatbázisból, hanem a külső szolgáltatótól származnak.
 
-\begin{table}[ht]
+\begin{table}[H]
   \centering
   \begin{tabulary}{\linewidth}{llL} 
     \toprule
@@ -129,7 +143,7 @@ Ha külső fiókkal jelentkezik be, az alkalmazás azt is absztrakt módon képe
 
 Szócikk entitás, ami tartalmazza a Wikipédia oldal URL címét. Rendelkezik egy buffer-rel, amibe az adott cikkhez tartozó legutóbbi releváns változások kerülnek lementésre.
 
-\begin{table}[ht]
+\begin{table}[H]
   \centering
   \begin{tabulary}{\linewidth}{llL} 
     \toprule
@@ -147,7 +161,7 @@ Szócikk entitás, ami tartalmazza a Wikipédia oldal URL címét. Rendelkezik e
 
 A felhasználók feliratkozhatnak cikkek követésére, és különbözõ beállításokat alkalmaznak. Szükség van ezért egy kapcsolatra, ami tárolja ezeket a beállításokat a felhasználó - szócikk pároshoz.
 
-\begin{table}[ht]
+\begin{table}[H]
   \centering
   \begin{tabulary}{\linewidth}{llL} 
     \toprule
@@ -167,7 +181,7 @@ A felhasználók feliratkozhatnak cikkek követésére, és különbözõ beáll
 
 A detektált változások Notification objektumként kerülnek tárolásra. Attribútumaiban tárolásra kerülnek a változással kapcsolatos fontosabb adatok. Ez mindig tárolásra kerül a megváltozott cikk (Article) entitás differences listájában, és az érintett felhasználók (User) notifications listájában is.
 
-\begin{table}[ht]
+\begin{table}[H]
   \centering
   \begin{tabulary}{\linewidth}{llL} 
     \toprule
@@ -192,7 +206,7 @@ A felelősségek megfelelő elosztása érdekében minden olyan metódus, ami cs
 
 Lehetõséget biztosít a felhasználók kezelésére. Képes helyi felhasználói fiókot is létrehozni, de képes bejelentkeztetni akár már meglévő Wikipédia fiókkal is (és tetszőleges számban bővíthető tovább például Facebook felhasználói fiókra). Implementálja az IAccountManager interfészt a helyi bejelentkezéshez.
 
-\begin{table}[ht]
+\begin{table}[H]
   \centering
   \begin{tabulary}{\linewidth}{llL} 
     \toprule
@@ -214,7 +228,7 @@ Lehetõséget biztosít a felhasználók kezelésére. Képes helyi felhasznál�
 
 A SubscribeManager alapvetően a feliratkozások (Subscribe) kezeléséért felelős. Ezek az objektumok azonban kapcsolatot teremtenek a felhasználókkal (User) és a cikkekkel (Article) is, ezért különböző lekérdezési lehetőségek vannak felhasználókra és cikkekre, amire önmagában a UserManager vagy az ArticleManager nem lenne képes. Ez az osztály felelős azért is, hogy a Notification objektumokat konziosztens állapotban tartsa, vagyis hogy az Article objektumoknál lementett változások (Notification) bekerüljenek az érintett felhasználó notifications lisájába is.
 
-\begin{table}[ht]
+\begin{table}[H]
   \centering
   \begin{tabulary}{\linewidth}{llL} 
     \toprule
@@ -247,7 +261,7 @@ A SubscribeManager alapvetően a feliratkozások (Subscribe) kezeléséért fele
 
 Felhasználók kezeléséért felelős osztály. Metódusai lehetőséget biztosítanak a bejelentkezésre. A bemenő paraméter alapján képes önállóan kiválasztani a bejelentkezési módot (lokális, Wikipédia, Facebook... stb.).
 
-\begin{table}[ht]
+\begin{table}[H]
   \centering
   \begin{tabulary}{\linewidth}{llL} 
     \toprule
@@ -305,16 +319,21 @@ Felhasználók kezeléséért felelős osztály. Metódusai lehetőséget biztos
 
 \subsection{WikiModule}
 
-A Wikipédia API az alkalmazásunk szempontjából hasznos metódusokat publikál, amiket REST-es kérésekkel lehet elérni. Ez a komponens a CommunicationManager használatával elfedi REST kéréseket, és wrapper-ként java metódusokon keresztül szolgáltatja a funkcionalitásokat a többi osztály felé.
- \begin{table}[ht]
+A Wikipédia szócikkekről rengeteg információt le lehet kérni egy REST alapú interfészen keresztül. Ezek közé tartoznak a változások is, amiket a programunkban felhasználtunk. 
+
+A ``hagyományos'' Wikipédia URL-ekben az elérési út része a kért oldal. Az API kéréseinket viszont mindig a \verb!/w/api.php!-hoz kell intéznünk, és query paramétereken keresztül finomíthatjuk a szűrést.
+
+A FolloWiki negyedórás intervallumokban kéri le a változásokat a figyelt cikkekről. Mivel az összes oldal bejárása jelentős időt vehet igénybe -- ami a szerver egyéb terhelésétől függően akár váltakozhat is -- a változásokat mindig csak az első kérés időpontjáig kérjük le. Az, hogy egy oldal később kerül sorra, nem jelentheti azt, hogy róla már egy ennyivel nagyobb intervallumba eső változásokat kérünk le.
+
+A kommunikációt a JAX-RS absztrakciós rétegen keresztül végezzük, ami elfedi a REST hívások konkrét implementációját. A visszaérkező adatokat JAXB segítségével dolgozzuk fel, ami az XML vagy JSON szövegből megfelelően annotált osztályok példányait állítja elő automatikusan. Ezzel a fajta leképezéssel sajnos nem lehet minden valid JSON dokumentumot leírni, és ebbe a kategóriába tartoznak a Wikipédia válaszüzenetei is. Ha viszont XML-t kérünk, azt nagyszerűen fel tudja dolgozni a könyvtár.
+
+ \begin{table}[H]
   \centering
   \begin{tabulary}{\linewidth}{llL} 
     \toprule
     Függvényév & Típus & Jelentés \\ [0.5ex] 
     \midrule
-    \verb|getDifferences| & \verb|List<String>| & Egy cikkhez visszaadja a változásokat \\ 
-    \hline
-    \verb|login| & \verb|String| & Wikipédián keresztül bejelentkezteti a felhasználót \\ 
+    \verb|getRevisions| & \verb|Page| & Visszaadja egy URL-hez az adott oldal változásait tartalmazó objektumot\\
     \bottomrule
   \end{tabulary}
   \caption{A WikiModule osztály metódusai}
@@ -351,12 +370,137 @@ Egyes oldalak megtekintéséhez authentikáció szükséges. Java Server Faces h
 
 Ismert, hogy az oldalak nincsenek biztosítva cross-side-scripting ellen. Ez azonban csak minimális veszélyeket rejt, mivel minden felhasználó csak a maga által megadott adatokat láthatja. Ismert továbbá az is, hogy a beviteli mezők többsége kliensoldali, így annak a megkerülésével lehetőség nyílhat hibás meviteli értékek megadására.
 
-
-
-
-
-
 \chapter{Telepítési útmutató}
+
+Az útmutató egy Ubuntu 16.04-et futtató gépből indul ki, de kis módosításokkal más rendszereken is elvégezhetőek a lépések.
+
+\begin{samepage}
+Maga az oldal alapértelmezetten a 8080-as porton lesz elérhető, a szerver management portja pedig a 4848-as. Ezeket át kell engednünk az operációs rendszerben és a hálózaton lévő tűzfalakon.
+
+\begin{lstlisting}[language=bash]
+sudo ufw allow 4848/tcp
+sudo ufw allow 8080/tcp
+\end{lstlisting}
+\end{samepage}
+
+\begin{samepage}
+Az útmutatóban használt Payara szerver sajnos nem érhető el a hivatalos szoftvertárolóból, ezért azt külön le kell töltenünk.
+
+\begin{lstlisting}[language=bash]
+wget https://s3-eu-west-1.amazonaws.com/payara.fish/Payara+Downloads/Payara+4.1.1.164/payara-4.1.1.164.zip
+unzip payara-4.1.1.164.zip
+\end{lstlisting}
+\end{samepage}
+
+\begin{samepage}
+A többi függőség, mint az adatbázis szerver, a futtatókörnyezet vagy a fordításhoz használt eszközök elérhetők a megszokott csatornán keresztül is.
+
+\begin{lstlisting}[language=bash]
+sudo apt-get install mysql-server mysql-client libmysql-java openjdk-8-jdk maven git
+\end{lstlisting}
+\end{samepage}
+
+\begin{samepage}
+Az előző lépés során a MySQL telepítő rákérdezett a \verb!root! adatbázis felhasználó jelszavára, ezzel most lépjünk is be!
+
+\begin{lstlisting}[language=bash]
+mysql -u root -p
+\end{lstlisting}
+\end{samepage}
+
+\begin{samepage}
+A program futtatásához egy új felhasználói fiókra és egy üres adatbázisra lesz szükségünk. A nevek természetesen tetszőlegesen felcserélhetőek, a lényeg az, hogy később is az itt megadott értékeket használjuk.
+
+\begin{lstlisting}[language=sql]
+create database followikidb;
+grant all on followikidb.* to followikiusr@localhost identified by 'followikipw';
+\end{lstlisting}
+\end{samepage}
+
+\begin{samepage}
+A Payara nem találja meg a MySQL könyvtárat azon a helyen, ahova a csomagkezelő telepítette, de egy szimbolikus link létrehozásával orvosolhatjuk a problémát.
+
+\begin{lstlisting}[language=bash]
+ln -s /usr/share/java/mysql.jar payara41/glassfish/domains/domain1/lib/mysql.jar
+\end{lstlisting}
+\end{samepage}
+
+\begin{samepage}
+A szervert az \verb!asadmin! programmal vezérelhetjük. Ahhoz, hogy távoli gépről is elérjük a webes management felületet előbb meg kell adni egy adminisztrátori jelszót, majd be kell kapcsolni a kötelező HTTPS használatot.
+
+\begin{lstlisting}[language=bash]
+cd payara41/bin/
+./asadmin change-admin-password --domain\_name domain1
+./asadmin start-domain
+./asadmin enable-secure-admin
+./asadmin restart-domain
+\end{lstlisting}
+\end{samepage}
+
+A következő lépéseket a 4848-as porton elérhető grafikus felületen keresztül fogjuk elvégezni. Jelentkezzünk be az előbb megadott felhasználónévvel és jelszóval!
+
+\begin{samepage}
+Először létre kell hoznunk egy JDBC connection pool-t, ahogy a következő kép mutatja. Az elnevezés nem számít, a driver beállításait viszont pontosan kell megadni!
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.4]{install1}
+\end{figure}
+\end{samepage}
+
+\begin{samepage}
+A következő oldal alján adhatjuk meg a hozzáférési adatokat a korábban létrehozott adatbázishoz.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.4]{install2}
+\end{figure}
+\end{samepage}
+
+\begin{samepage}
+A kapcsolódáshoz még egy JDBC resource-ot is létre kell hoznunk, ez viszont fontos, hogy a \verb!jdbc/followiki! nevet kapja, mert a program ez alapján azonosítja.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.4]{install3}
+\end{figure}
+\end{samepage}
+
+\begin{samepage}
+Az adatbázis kapcsolat mellett az e-mail küldést is a szerveren keresztül végzi a szoftver, így tehát egy SMTP kapcsolatot is be kell állítanunk. A kép egy Gmail-es cím használatára mutat példát, de gyakorlatilag bármilyen szolgáltatással működik a funkció. Itt is fontos a \verb!mail/followiki! név használata!
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.4]{install4}
+\end{figure}
+\end{samepage}
+
+\begin{samepage}
+Ezzel kész is van a környezet, amiben a FolloWiki futni fog, nincs más hátra, mint letölteni és lefordítani a forráskódot. A további függőségeket már automatikusan letölti a Maven.
+
+\begin{lstlisting}[language=bash]
+git clone https://github.com/ldmnyblzs/FolloWiki.git
+cd FolloWiki
+mvn install
+\end{lstlisting}
+\end{samepage}
+
+\begin{samepage}
+A végeredmény egy \verb!.war! fájl, ezt kell a Payara-ba betölteni, és a 8080-as porton elérhetővé válik a program.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.4]{install5}
+\end{figure}
+\end{samepage}
+
+\chapter{Tesztkörnyezet}
+
+Az egyes elemeket unit tesztelésnek vetettük alá. Ennek során vizsgáltuk például, hogy az arra hivatott komponens helyesen kezeli-e a JPA entitásokat, vagy éppen jól értelmezi-e a JSON üzeneteket.
+
+Az egész rendszer integrációs teszteléséhez két virtuális gépet használtunk a BME Cloud-ban. Az egyiken az előző fejezetben részletezett módon futott a FolloWiki, a másikon pedig egy saját MediaWiki telepítés. Erre azért volt szükség, mert az éles Wikipédiát nem szerkeszthettük volna folyamatosan csak azért, hogy legyenek tesztadataink.
+
+Felmerült, hogy az e-mail küldés funkcióhoz egy saját levelezőszervert is felállítunk, és minden forgalmat a belső hálózaton keresztül bonyolítunk. Ez első elgondolásra kiszámíthatóbb tesztkörnyezetnek tűnt, ám végül egy Gmail fiók is megbízhatóan el tudta látni ezt a feladatot.
 
 \chapter{Használt eszközök}
 
