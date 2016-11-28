@@ -17,6 +17,6 @@ doc/*
 # except for LaTeX
 *.ltx
 
-persistence.xml
+# persistence.xml
 /target/
 /login.properties
